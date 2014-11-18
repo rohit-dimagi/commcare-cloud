@@ -10,6 +10,10 @@
   git: repo={{ commcarehq_repository }} dest={{ code_home }} version={{ commcarehq_version }} recursive=yes accept_hostkey=yes depth=1
   sudo_user: "{{ cchq_user }}"
 
+- name: copy CommCare HQ source to preindex
+  copy: src={{ code_home }} dest={{ preindex_home }}
+  sudo_user: "{{ cchq_user }}"
+
 - name: install pip requirements
   sudo_user: "{{ cchq_user }}"
   with_items: commcarehq_requirements
@@ -17,8 +21,12 @@
     requirements: "{{ code_home }}/requirements/{{ item }}"
     virtualenv: "{{ virtualenv_home }}"
 
+- name: copy virtualenv
+  sudo_user: "{{ cchq_user }}"
+  copy: src="{{ virtualenv_home }}" dest="{{ virtualenv_preindex_home }}"
+
 - name: copy localsettings
   sudo_user: "{{ cchq_user }}"
   template:
-    src: localsettings.py.j2
+    src: localsettings.salt.py.j2
     dest: "{{ code_home }}/localsettings.py"
