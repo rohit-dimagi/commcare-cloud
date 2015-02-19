@@ -37,8 +37,8 @@
     # ForensicLog "|/home/logstash/forensic.py > {{ log_home }}/cchq_forensic_json.log"
 
 
-    ErrorDocument 503  "Sorry! CommCareHQ is undergoing some maintenance at the moment, we hope to be back online as soon as possible!"
-    ErrorDocument 502  "Sorry! CommCareHQ is undergoing some maintenance at the moment, we hope to be back online as soon as possible!"
+    ErrorDocument 503  {{ apache2_static_home }}/error/down.html
+    ErrorDocument 502  {{ apache2_static_home }}/error/down.html
 
     ProxyPass /static !
     <Proxy balancer://hqcluster>
