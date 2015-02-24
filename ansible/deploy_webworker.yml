@@ -122,4 +122,3 @@
   vars:
     apache2_install: False
     nginx_install: False
->>>>>>> employ the switch for proxy type within the playbook for deploying a webworker
