@@ -1,0 +1,4 @@
+---
+# default values for the provision_ec2 role
+num_instances: 1
+key_name: ansible_key
