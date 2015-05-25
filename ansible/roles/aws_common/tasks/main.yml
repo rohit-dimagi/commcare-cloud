@@ -44,8 +44,6 @@
   set_fact:
     grouped_vpc_subnets: "{{ vpc.subnets|dictby('resource_tags.Tier') }}"
 
-- debug: var=grouped_vpc_subnets
-
 - name: Ensure security groups
   ec2_group:
     name: "{{ item.value.name }}"
@@ -57,10 +55,6 @@
   with_dict: security_groups
   register: sgs
 
-- debug: var=sgs
-
 - name: Group security groups by tier
   set_fact:
     grouped_security_groups: "{{ sgs.results|dictby('item.key') }}"
-
-- debug: var=grouped_security_groups
