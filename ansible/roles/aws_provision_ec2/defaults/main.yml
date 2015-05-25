@@ -2,3 +2,12 @@
 # default values for the provision_ec2 role
 num_instances: 1
 key_name: ansible_key
+instance_type: t2.micro
+# this is an ubuntu trusty 64-bit EBS-backed AMI suitable for use with the
+# t2.micro instance type.  Selections of ami are dependent on a number of
+# factors: see http://aws.amazon.com/amazon-linux-ami/instance-type-matrix/
+ami: ami-55526765
+assign_public_ip: yes
+root_ebs_size: 8
+instance_tags: { "Name": "Dimagi Demo", "Tier": "Webhosts" }
+
