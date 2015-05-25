@@ -19,72 +19,25 @@
         resource_tags: { "Name": "Dimagi Demo", "Environment": "Demonstration", "Tier": "DB"}
   register: vpc
 
-- name: Get all subnets from vpc
+- name: Group subnets by tier
   set_fact:
-    vpc_subnets: "{{ vpc.subnets }}"
+    grouped_vpc_subnets: "{{ vpc.subnets|dictby('resource_tags.Tier') }}"
 
-- name: Group Subnets by Tier
-  set_fact:
-    grouped_vpc_subnets: "{{ vpc_subnets|dictby('resource_tags.Tier') }}"
+- debug: var=grouped_vpc_subnets
 
-- name: Ensure Webserver Security Group
+- name: Ensure security groups
   ec2_group:
-    name: WebserverSecurityGroup
-    description: firewall rules for webserver instances
+    name: "{{ item.value.name }}"
+    description: "{{ item.value.description }}"
     region: "{{ region }}"
     vpc_id: "{{ vpc.vpc_id }}"
-    rules:
-      - proto: tcp
-        from_port: 80
-        to_port: 80
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 443
-        to_port: 443
-        cidr_ip: 0.0.0.0/0
-      # this is not a good idea, but here for proof of concept
-      - proto: tcp
-        from_port: 22
-        to_port: 22
-        cidr_ip: 0.0.0.0/0
-      # allow any communications at all from servers in this same group
-      - proto: all
-        group_name: WebserverSecurityGroup
-      # allow postgresql communications from servers in the rds security group
-      - proto: tcp
-        from_port: 5432
-        to_port: 5432
-        group_name: RDSSecurityGroup
-        group_desc: firewall rules for rds instances
-  register: ws_rules
+    rules: "{{ item.value.rules | default({}) }}"
+    rules_egress: "{{ item.value.rules_egress | default({}) }}"
+  with_dict: security_groups
+  register: sgs
 
-- name: Set webserver_security_group
+- name: Group security groups by tier
   set_fact:
-    webserver_security_group: "{{ ws_rules.group_id }}"
+    grouped_security_groups: "{{ sgs.results|dictby('item.key') }}"
 
-- name: Ensure RDS Database Security Group
-  ec2_group:
-    name: RDSSecurityGroup
-    region: "{{ region }}"
-    description: firewall rules for rds instances
-    vpc_id: "{{ vpc.vpc_id }}"
-    rules:
-      - proto: all
-        group_name: WebserverSecurityGroup
-        group_desc: firewall rules for webserver instances
-      - proto: all
-        group_name: RDSSecurityGroup
-    rules_egress:
-      - proto: tcp
-        from_port: 80
-        to_port: 80
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 443
-        to_port: 443
-        cidr_ip: 0.0.0.0/0
-  register: rds_rules
-
-- name: Set rds_security_group
-  set_fact:
-    rds_security_group: "{{ rds_rules.group_id }}"
+- debug: var=grouped_security_groups
