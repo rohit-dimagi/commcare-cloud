@@ -1,3 +1,52 @@
 ---
 # sensible default values for the vars used in the aws_common role
 
+security_groups: 
+  Webhosts:
+    name: WebserverSecurityGroup
+    description: firewall rules for webserver instances
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+      # this is not a good idea, but here for proof of concept
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      # allow any communications at all from servers in this same group
+      - proto: all
+        group_name: WebserverSecurityGroup
+      # allow postgresql communications from servers in the rds security group
+      - proto: tcp
+        from_port: 5432
+        to_port: 5432
+        group_name: RDSSecurityGroup
+        group_desc: firewall rules for rds instances
+  DB:
+    name: RDSSecurityGroup
+    description: firewall rules for rds instances
+    rules:
+      # allow any communications between machines in the webserver and rds
+      # security groups
+      - proto: all
+        group_name: WebserverSecurityGroup
+        group_desc: firewall rules for webserver instances
+      - proto: all
+        group_name: RDSSecurityGroup
+    rules_egress:
+      # allow only http/https egress from the rds machines to the outside
+      # world.
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
