@@ -5,18 +5,39 @@
     state: present
     wait: yes
     cidr_block: 10.0.0.0/16
-    resource_tags: { "Name": "Dimagi Demo", "Environment": "Demonstration" }
+    resource_tags: 
+      Name: Dimagi Demo
+      Environment: Demonstration
     region: "{{ region }}"
+    internet_gateway: yes
+    route_tables:
+      - subnets: 
+          - 10.0.1.0/24
+        routes: 
+          - dest: 0.0.0.0/0
+            gw: igw
     subnets:
       - cidr: 10.0.1.0/24
         az: "{{ region }}a"
-        resource_tags: { "Name": "Dimagi Demo", "Environment": "Demonstration", "Tier": "Webhosts"}
+        resource_tags:
+          Name: Dimagi Demo
+          Environment: Demonstration
+          Tier: Webhosts
+          Visibility: Public
       - cidr: 10.0.2.0/24
         az: "{{ region }}b"
-        resource_tags: { "Name": "Dimagi Demo", "Environment": "Demonstration", "Tier": "DB"}
+        resource_tags: 
+          Name: Dimagi Demo
+          Environment: Demonstration
+          Tier: DB
+          Visibility: Private
       - cidr: 10.0.3.0/24
         az: "{{ region }}c"
-        resource_tags: { "Name": "Dimagi Demo", "Environment": "Demonstration", "Tier": "DB"}
+        resource_tags: 
+          Name: Dimagi Demo
+          Environment: Demonstration
+          Tier: DB
+          Visibility: Private
   register: vpc
 
 - name: Group subnets by tier
@@ -35,6 +56,8 @@
     rules_egress: "{{ item.value.rules_egress | default({}) }}"
   with_dict: security_groups
   register: sgs
+
+- debug: var=sgs
 
 - name: Group security groups by tier
   set_fact:
