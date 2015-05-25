@@ -2,6 +2,30 @@
 # sensible default values for the vars used in the aws_common role
 
 security_groups: 
+  Proxies:
+    name: ProxySecurityGroup
+    description: firewall rules for proxy servers
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+      # this is not a good idea, but here for proof of concept, it would be
+      # better to lock down ssh access to a known set of IP addresses or a
+      # range known to be internal to company networks.
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: all
+        group_name: ProxySecurityGroup
+      - proto: all
+        group_name: WebserverSecurityGroup
+        group_desc: firewall rules for webserver instances
   Webhosts:
     name: WebserverSecurityGroup
     description: firewall rules for webserver instances
@@ -37,6 +61,9 @@ security_groups:
       - proto: all
         group_name: WebserverSecurityGroup
         group_desc: firewall rules for webserver instances
+      - proto: all
+        group_name: ProxySecurityGroup
+        group_desc: firewall rules for proxy servers
       - proto: all
         group_name: RDSSecurityGroup
     rules_egress:
