@@ -1,0 +1,42 @@
+---
+# tasks for the aws_provision_rds role
+
+- name: Ensure DB Subnet Group
+  local_action:
+    module: rds_subnet_group
+    state: present
+    name: "{{ rds_db_subnet_name }}"
+    description: "{{ rds_db_subnet_description }}"
+    region: "{{ region }}"
+    subnets: "{{ grouped_vpc_subnets[instance_tags['Tier']]|map(attribute='id')|list }}"
+
+- name: Launch RDS Instance(s)
+  local_action:
+    module: rds
+    command: create
+    db_engine: "{{ rds_db_engine }}"
+    db_name: "{{ rds_db_name }}"
+    username: "{{ rds_db_username }}"
+    password: "{{ rds_db_password }}"
+    size: "{{ rds_db_storage_size }}"
+    instance_name: "{{ rds_db_instance_name }}"
+    instance_type: "{{ rds_db_instance_type }}"
+    vpc_security_groups: "{{ grouped_security_groups[instance_tags['Tier']]|join(', ', attribute='group_id') }}"
+    region: "{{ region }}"
+    tags: "{{ instance_tags }}"
+    subnet: "{{ rds_db_subnet_name }}"
+    # for more options, including control of maintenance and backup windows and
+    # procedures, see http://docs.ansible.com/rds_module.html
+
+- name: Wait for new RDS instance to be available
+  local_action:
+    module: rds
+    command: facts
+    region: "{{ region }}"
+    instance_name: "{{ rds_db_instance_name }}"
+  register: result
+  until: result.instance.status == "available"
+  retries: 20
+  delay: 60
+
+- debug: var=result

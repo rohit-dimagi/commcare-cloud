@@ -1,0 +1,21 @@
+---
+# sensible default values for the aws_provision_rds role
+
+instance_tags: { "Name": "Dimagi Demo", "Tier": "DB" }
+
+# for the db subnet group
+rds_db_subnet_name: dimagi-demo-subnet
+rds_db_subnet_description: a subnet group of private subnets available for the db Tier
+
+# for the rds instance itself
+rds_db_instance_name: dimagi-demo-database
+rds_db_storage_size: 8
+# free tier usage.  See http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html
+rds_db_instance_type: db.t2.micro
+
+# for the database created in the instance
+rds_db_engine: postgres
+rds_db_name: testdatabase
+rds_db_username: dimagi_demouser
+rds_db_password: s00p3rs3cr3t
+

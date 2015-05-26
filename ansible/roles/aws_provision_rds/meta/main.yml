@@ -1,0 +1,4 @@
+---
+# control dependencies for the aws_provision_rds roles
+dependencies:
+  - role: aws_common
