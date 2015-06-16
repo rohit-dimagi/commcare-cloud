@@ -76,3 +76,6 @@
     - { path: "{{ preindex_home }}", deploy_env_name: "{{ deploy_env }}_preindex" }
   tags:
     - localsettings
+  notify:
+    - stop supervisor
+    - start supervisor
