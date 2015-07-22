@@ -201,6 +201,14 @@ LOCAL_APPS = ('dimagi.utils', 'gunicorn', 'raven.contrib.django.raven_compat',)
 BITLY_LOGIN = '{{ localsettings.BITLY_LOGIN }}'
 BITLY_APIKEY = '{{ localsettings.BITLY_APIKEY }}'
 
+{% if 'OPBEAT_ORGANIZATION_ID' in localsettings %}
+OPBEAT = {
+    'ORGANIZATION_ID': '{{ localsettings.OPBEAT_ORGANIZATION_ID }}',
+    'APP_ID': '{{ localsettings.OPBEAT_APP_ID }}',
+    'SECRET_TOKEN': '{{ localsettings.OPBEAT_SECRET_TOKEN }}',
+}
+{% endif %}
+
 _ROOT_DIR  = os.path.dirname(os.path.abspath(__file__))
 JAR_SIGN = dict(
     jad_tool = os.path.join(_ROOT_DIR, "submodules", "core-hq-src", "corehq", "apps", "app_manager", "JadTool.jar"),
