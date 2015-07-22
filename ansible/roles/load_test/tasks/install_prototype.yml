@@ -25,7 +25,7 @@
 - name: install pip requirements
   sudo_user: "{{ cchq_user }}"
   pip:
-    requirements: "{{ prototype_code_home }}/requirements.txt"
+    requirements: "{{ prototype_code_home }}/prototype/requirements.txt"
     virtualenv: "{{ prototype_virtualenv_home }}"
 
 - name: copy localconfig
