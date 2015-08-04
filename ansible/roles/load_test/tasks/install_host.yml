@@ -1,5 +1,9 @@
 ---
 
+- include: install_mongo.yml
+  tags:
+    - mongo
+
 - name: Create PostgreSQL benchmark database
   sudo_user: postgres
   postgresql_db: name={{ item }} state=present
