@@ -1,6 +1,5 @@
 ---
 
-# sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 - name: Add apt key
   apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10
 
@@ -9,14 +8,19 @@
 #  command: 'echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list'
 
 - name: Add Mongo apt repo
-  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename}}/mongodb-org/3.0 multiverse' state=present
-  register: add_mongo_repo
+  lineinfile:
+    dest: /etc/apt/sources.list.d/mongodb-org-3.0.list
+    state: present
+    line: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename}}/mongodb-org/3.0 multiverse"
+
+
+#- name: Add Mongo apt repo
+#  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename}}/mongodb-org/3.0 multiverse' state=present
+#  register: add_mongo_repo
 
 - name: Update package list
   apt: update_cache=yes
   when: add_mongo_repo|changed
 
-# sudo apt-get update
-# sudo apt-get install -y mongodb-org
 - name: Install the MongoDB packages
   apt: update_cache=yes name=mongodb-org=3.0.5
