@@ -1,5 +1,9 @@
 ---
 
+- include: install_mongo.yml
+  tags:
+    - mongo
+
 - name: Install packages to be used for load testing
   apt: name={{ item }} state=present
   sudo: yes
