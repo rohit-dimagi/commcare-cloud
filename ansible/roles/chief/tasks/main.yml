@@ -1,0 +1,12 @@
+- name: pull CommCare HQ source
+  stat: path="{{ chief_dir }}/.git"
+  register: gitdir
+- git: repo={{ commcarehq_repository }} dest={{ chief_dir }} recursive=yes accept_hostkey=yes depth=1 update={{ not gitdir.stat.exists }}
+  sudo_user: "{{ cchq_user }}"
+
+- name: install pip requirements
+  sudo_user: "{{ cchq_user }}"
+  with_items: commcarehq_requirements
+  pip:
+    requirements: "{{ chief_dir }}/requirements/{{ item }}"
+    virtualenv: "{{ chief_virtualenv_dir }}"

@@ -1,0 +1,2 @@
+chief_dir: "{{ cchq_home }}/chief"
+chief_virtual_env: "{{ chief_dir }}/python_env"
