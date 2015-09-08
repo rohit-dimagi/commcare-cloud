@@ -1,2 +1,2 @@
-chief_dir: "{{ cchq_home }}/{{ deploy_env }}/chief"
+chief_dir: "{{ cchq_home }}/chief/{{ deploy_env }}"
 chief_virtualenv_dir: "{{ chief_dir }}/python_env"
