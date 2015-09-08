@@ -30,3 +30,9 @@ newrelic_agents_rabbitmq: False
 newrelic_agents_elastic: False
 newrelic_agents_nginx: False
 newrelic_agents_apache: False
+
+commcarehq_repository: https://github.com/dimagi/commcare-hq.git
+commcarehq_version: master
+commcarehq_requirements:
+  - requirements.txt
+  - prod-requirements.txt
