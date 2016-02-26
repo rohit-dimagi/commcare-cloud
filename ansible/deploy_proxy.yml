@@ -12,6 +12,7 @@
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.cchq_redirect == True, action: site, site_name: cchq_redirect }
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.cchq_http == True, action: site, site_name: cchq_http }
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.cchq_http_redirect == True, action: site, site_name: cchq_http_redirect }
+    - { role: nginx, when: proxy_type == 'nginx' and active_sites.cchq_assets == True, action: site, site_name: cchq_assets }
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.hq_status == True, action: site, site_name: hq_status }
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.icds_tableau == True, action: site, site_name: icds_tableau }
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.icds_tableau == True, action: site, site_name: icds_tableau_http }
