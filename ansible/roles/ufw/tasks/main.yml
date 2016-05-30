@@ -15,6 +15,8 @@
   with_items:
     - 8.8.8.8
     - 8.8.4.4
+    - 173.203.4.9
+    - 173.203.4.8
 
 - name: default to deny all outgoing traffic
   ufw: policy=deny direction=outgoing
