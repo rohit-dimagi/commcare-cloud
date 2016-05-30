@@ -5,7 +5,7 @@
     - common
 
 - name: ufw (firewall)
-  hosts: '!proxy'
+  hosts: '!squid'
   sudo: yes
   roles:
     - {role: ufw, tags: ufw, when: ufw_private_interface is defined and control_machine_ip is defined }
