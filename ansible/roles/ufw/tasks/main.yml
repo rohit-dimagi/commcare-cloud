@@ -10,6 +10,12 @@
 - name: allow traffic to squid proxy
   ufw: policy=allow direction=outgoing to={{ groups["squid"][0] }} port=3128
 
+- name: allow DNS lookups
+  ufw: policy=allow direction=outgoing to={{ item }}
+  with_items:
+    - 8.8.8.8
+    - 8.8.4.4
+
 - name: default to deny all outgoing traffic
   ufw: policy=deny direction=outgoing
 
