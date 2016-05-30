@@ -14,7 +14,7 @@
   ufw: rule=allow direction=out port=53
 
 - name: default to deny all outgoing traffic
-  ufw: policy=deny direction=out
+  ufw: policy=deny direction=outgoing
 
 - name: turn on firewall
   ufw: state=enabled
