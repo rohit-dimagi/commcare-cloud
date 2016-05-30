@@ -5,3 +5,4 @@ DimagiKeyStore
 .idea/
 .DS_Store
 ansible/*.retry
+external-roles
