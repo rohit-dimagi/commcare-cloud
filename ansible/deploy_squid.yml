@@ -1,8 +1,10 @@
 ---
 - hosts: squid
   vars:
+    squid_acls:
+      - {name: monolith, type: src, argument: 10.209.162.131}
     squid_http_access_allow_clients:
       - localhost
-      - "{{ groups['proxy'][0] }}"
+      - monolith
   roles:
     - kbrebanov.squid
