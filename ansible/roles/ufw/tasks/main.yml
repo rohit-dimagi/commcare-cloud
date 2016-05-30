@@ -7,5 +7,11 @@
 - name: default to denying all incoming traffic
   ufw: policy=deny direction=incoming
 
+- name: allow traffic to squid proxy
+  ufw: policy=allow direction=outgoing to={{ groups["squid"][0] }} port=3128
+
+- name: default to deny all outgoing traffic
+  ufw: policy=deny direction=outgoing
+
 - name: turn on firewall
   ufw: state=enabled
