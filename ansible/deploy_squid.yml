@@ -1,0 +1,8 @@
+---
+- hosts: squid
+  vars:
+    squid_http_access_allow_clients:
+      - localhost
+      - "{{ groups['proxy'][0] }}"
+  roles:
+    - kbrebanov.squid
