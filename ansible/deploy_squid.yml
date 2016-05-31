@@ -9,7 +9,8 @@
   roles:
     - kbrebanov.squid
 
+# need to update hosts correctly for non-monoliths
 - name: configure http_proxy for package managers
-  hosts: monolith
+  hosts: webworkers
   roles:
     - http_proxy
