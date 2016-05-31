@@ -1,0 +1,7 @@
+- name: configure apt proxy
+  lineinfile:
+    dest: "/etc/apt/apt.conf"
+    line: 'Acquire::http::proxy "http://{{http_proxy}}/"'
+    create: "yes"
+  tags:
+    - http_proxy

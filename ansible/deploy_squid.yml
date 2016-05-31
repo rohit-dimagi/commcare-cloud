@@ -8,3 +8,8 @@
       - monolith
   roles:
     - kbrebanov.squid
+
+- name: configure http_proxy for package managers
+  hosts: monolith
+  roles:
+    - http_proxy
