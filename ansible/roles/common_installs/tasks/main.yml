@@ -21,7 +21,7 @@
   register: add_postgres_repo
 
 - name: Add PosgreSQL apt key
-  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+  apt_key: id=ACCC4CF8 url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
 
 - name: Update package list
   apt: update_cache=yes
