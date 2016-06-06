@@ -14,16 +14,7 @@
   ufw: rule=allow direction=out port=53
 
 - name: allow smtp traffic to email-smtp.us-east-1.amazonaws.com
-  ufw: rule=allow direction=out to={{item}} port=587
-  with_items:
-    - 107.20.142.169
-    - 107.21.238.216
-    - 107.22.250.234
-    - 23.21.89.230
-    - 23.21.205.190
-    - 50.19.95.232
-    - 50.19.224.18
-    - 54.243.69.182
+  ufw: rule=allow direction=out port=587
 
 - name: default to deny all outgoing traffic
   ufw: policy=deny direction=outgoing
