@@ -41,3 +41,8 @@ nginx_sites:
      balancer: webworkers
      proxy_next_upstream_tries: 1
      proxy_read_timeout: 900s
+    location7:
+     name: "~* /a/[^/]+/phone/restore/[a-z0-9]+/"
+     balancer: webworkers
+     proxy_next_upstream_tries: 1
+     proxy_read_timeout: 900s
