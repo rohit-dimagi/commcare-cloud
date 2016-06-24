@@ -1,3 +1,13 @@
+- name: Create blobdb backup directory
+  sudo: yes
+  file:
+    path: '{{ blobdb_backup_dir }}'
+    owner: blobdb
+    group: blobdb
+    mode: 0755
+    state: directory
+  when: backup_blobdb
+  
 - name: Copy blobdb backup script
   sudo: yes
   template:
