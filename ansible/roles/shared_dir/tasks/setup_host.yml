@@ -1,5 +1,42 @@
 ---
 
+- name: Check for valid partition table on block storage device
+  sudo: yes
+  shell: fdisk -l 2>&1 | grep 'Disk {{ nfs_datavol_device }} doesn.t contain a valid partition table'
+  register: partition_check
+  changed_when: false
+  failed_when: false
+  when: nfs_datavol_device is defined
+
+- name: Create partition on block storage volume
+  sudo: yes
+  shell: echo -e "o\nn\np\n1\n\n\nw" | fdisk {{ nfs_datavol_device }}
+  # http://superuser.com/a/739586/86694
+  # o - clear in memory partition table
+  # n - new partition
+  # p - primary partition
+  # 1 - partition number 1
+  #   - default - start at beginning of disk 
+  #   - default - use entire disk
+  # w - write the partition table
+  when: nfs_datavol_device is defined and partition_check.rc == 0
+
+- name: Format block storage volume
+  sudo: yes
+  filesystem: fstype=ext4 dev={{ nfs_datavol_device }}
+  when: nfs_datavol_device is defined
+
+- name: Mount block storage volume
+  sudo: yes
+  mount: name={{ shared_data_dir }} src={{ nfs_datavol_device }}1 fstype=ext4 state=mounted opts=defaults,noatime,user
+  when: nfs_datavol_device is defined
+
+- name: Check for already mounted encrypted drive
+  shell: grep '{{ shared_data_dir }}' /etc/mtab
+  register: mtab_contents
+  failed_when: false
+  changed_when: false
+
 - name: Create shared data dir
   sudo: yes
   file:
