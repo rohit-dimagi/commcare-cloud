@@ -8,6 +8,7 @@
     - rabbitmq
     - zookeeper
     - riakcs
+    - pg_standby
   sudo: yes
   roles:
     - {role: ecryptfs, tags: 'ecryptfs'}
