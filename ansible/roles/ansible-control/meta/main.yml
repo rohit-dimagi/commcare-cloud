@@ -1,2 +1,2 @@
 dependencies:
-  - {role: users, tags: users}
+  - {role: common, tags: common}

@@ -4,4 +4,3 @@
   sudo: yes
   roles:
     - {role: ansible-control, tags: ansible-control}
-    - edit
