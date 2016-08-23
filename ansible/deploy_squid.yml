@@ -1,16 +1,16 @@
 ---
 - hosts: squid
-  vars:
-    squid_acls:
-      - {name: monolith, type: src, argument: 10.209.162.131}
-    squid_http_access_allow_clients:
-      - localhost
-      - monolith
+#  vars:
+#    squid_acls:
+#      - {name: monolith, type: src, argument: 10.209.162.131}
+#    squid_http_access_allow_clients:
+#      - localhost
+#      - monolith
   roles:
     - kbrebanov.squid
 
 # need to update hosts correctly for non-monoliths
-- name: configure http_proxy for package managers
-  hosts: webworkers
-  roles:
-    - http_proxy
+#- name: configure http_proxy for package managers
+#  hosts: webworkers
+#  roles:
+#    - http_proxy
