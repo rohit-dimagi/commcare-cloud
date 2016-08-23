@@ -1,4 +1,5 @@
 ---
+# http://serverfault.com/a/515696 - making a public open proxy
 - hosts: squid
 #  vars:
 #    squid_acls:
