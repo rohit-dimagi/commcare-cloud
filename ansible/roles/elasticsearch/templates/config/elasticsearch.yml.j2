@@ -7,6 +7,15 @@ cluster.name: "{{ elasticsearch_cluster_name }}"
 
 node.name: "{{ elasticsearch_node_name }}"
 
+{% if elasticsearch_node_zone is defined %}
+# Used for shard allocation awareness
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/allocation-awareness.html
+node.zone: "{{ elasticsearch_node_zone }}"
+{% endif %}
+
+# disable multiple nodes starting from the same installation location
+node.max_local_storage_nodes: 1
+
 transport.tcp.port: {{ elasticsearch_tcp_port }}
 
 http.port: {{ elasticsearch_http_port }}
@@ -46,3 +55,9 @@ index.search.slowlog.threshold.query.trace: 500ms
 # somewhat of a security risk but required by pact custom reports
 script.engine.groovy.inline.aggs: true
 script.engine.groovy.inline.search: true
+
+cloud:
+  aws:
+    access_key: "{{ localsettings.AMAZON_S3_ACCESS_KEY }}"
+    secret_key: "{{ localsettings.AMAZON_S3_SECRET_KEY }}"
+    region: "{{ aws_region }}"

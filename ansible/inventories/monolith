@@ -13,6 +13,9 @@
 [touchforms]
 192.168.33.21
 
+[formplayer]
+192.168.33.21
+
 [celery]
 192.168.33.21
 
@@ -42,3 +45,5 @@
 
 [stanchion]
 192.168.33.21
+
+[pg_standby]

@@ -4,4 +4,7 @@
   sudo: yes
   roles:
     - {role: users, tags: users}
-    - edit
+    - {role: ssh, tags: ssh}
+    - role: edit
+    - {role: ksplice, tags: ksplice}
+    - {role: ansible-control, tags: ansible-control}
