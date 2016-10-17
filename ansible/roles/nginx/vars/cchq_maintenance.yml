@@ -5,8 +5,8 @@ nginx_sites:
     file_name: "{{ deploy_env }}_maintenance"
     listen: "80"
     server_name: "{{ items|join(' ') }} "
-    with_items: "{{ urls }}"
-    when: item.env != "{{ deploy_env }}"
+      with_items: "{{ urls }}"
+      when: item.env != "{{ deploy_env }}"
     locations:
       - name: /
         return: 503
