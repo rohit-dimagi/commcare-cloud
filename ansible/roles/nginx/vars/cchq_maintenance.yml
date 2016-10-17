@@ -4,9 +4,7 @@ nginx_sites:
 - server:
     file_name: "{{ deploy_env }}_maintenance"
     listen: "80"
-    server_name: "{{ items|join(' ') }} "
-      with_items: "{{ urls }}"
-      when: item.env != "{{ deploy_env }}"
+    server_name: "*.commcarehq.org"
     locations:
       - name: /
         return: 503
