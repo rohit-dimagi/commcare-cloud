@@ -6,7 +6,7 @@ nginx_sites:
     listen: "80"
     server_name: "{{ items|join(' ') }} "
     with_items: "{{ urls }}"
-    when: "{{ item.env }}" != "{{ deploy_env }}"
+    when: item.env != "{{ deploy_env }}"
     locations:
       - name: /
         return: 503
