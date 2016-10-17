@@ -22,6 +22,7 @@ active_sites:
   riakcs: True
   riak: True
   riak_http: True
+  cchq_maintenance: True
 
 proxy_type: nginx
 
