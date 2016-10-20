@@ -9,3 +9,5 @@ nginx_sites:
     locations:
       - name: /
         return: 503
+      - name: /errors
+        alias: "{{ errors_home }}/pages"
