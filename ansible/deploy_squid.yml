@@ -1,12 +1,11 @@
 ---
 # http://serverfault.com/a/515696 - making a public open proxy
 - hosts: squid
-#  vars:
-#    squid_acls:
-#      - {name: monolith, type: src, argument: 10.209.162.131}
-#    squid_http_access_allow_clients:
-#      - localhost
-#      - monolith
+  vars:
+    squid_acls:
+      - {name: NIC, type: src, argument: 164.100.161.104}
+    squid_http_access_allow_clients:
+      - NIC
   roles:
     - kbrebanov.squid
 
