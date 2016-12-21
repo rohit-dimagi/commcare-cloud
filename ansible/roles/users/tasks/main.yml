@@ -8,11 +8,15 @@
   sudo: yes
   user: name={{ item }} state=present shell=/bin/bash groups={{ dev_group }}
   with_items: '{{ dev_users.present }}'
+  tags:
+    - limited-user
 
 - name: Add public keys
   sudo: yes
   authorized_key: user={{ item }} state=present key="{{ lookup('file', 'vars/users/' ~ item ~ '.pub') }}" exclusive=yes
   with_items: '{{ dev_users.present }}'
+  tags:
+    - limited-user
 
 - name: Remove dev users
   sudo: yes

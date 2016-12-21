@@ -42,6 +42,7 @@ dev_users:
     - sravfeyn
     - wpride
     - cchq
+    - lwyszomirski
   absent:
     - preseed
     - twymer
