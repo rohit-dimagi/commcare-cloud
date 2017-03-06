@@ -1,0 +1,17 @@
+---
+tsung_dest_dir: /usr/local/src/tsung
+tsung_version: HEAD
+tsung_debian_pkgs:
+  - git
+  - autoconf
+  - automake
+  - make
+  - erlang-base
+  - erlang-crypto
+  - erlang-eunit
+  - erlang-inets
+  - erlang-snmp
+  - erlang-ssl
+  - erlang-xmerl
+  - erlang-dev
+  - erlang-asn1

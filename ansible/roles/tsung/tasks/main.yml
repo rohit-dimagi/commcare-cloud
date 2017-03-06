@@ -1,0 +1,30 @@
+---
+- name: install system packages for tsung compilation
+  sudo: yes
+  apt: pkg={{ item }} state=present
+  with_items: tsung_debian_pkgs
+
+- name: clone the github repository
+  sudo: yes
+  git: >
+    repo=https://github.com/processone/tsung.git dest={{tsung_dest_dir}} version={{tsung_version}} depth=1
+
+- name: configure
+  sudo: yes
+  shell:
+    ./configure
+    chdir={{tsung_dest_dir}}
+    creates={{tsung_dest_dir}}/config.status
+
+- name: make
+  sudo: yes
+  shell:
+    /usr/bin/make
+    chdir={{tsung_dest_dir}}
+    creates={{tsung_dest_dir}}/ebin/tsung.app
+
+- name: make install
+  sudo: yes
+  shell:
+    /usr/bin/make install
+    chdir={{tsung_dest_dir}}
