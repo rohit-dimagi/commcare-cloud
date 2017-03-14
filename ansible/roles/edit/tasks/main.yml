@@ -5,7 +5,7 @@
 
 - name: Install Emacs
   sudo: yes
-  apt: name=emacs23 state=present
+  apt: name=emacs24 state=present
 
 - name: Include vimrc
   sudo: yes

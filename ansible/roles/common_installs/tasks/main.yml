@@ -7,13 +7,15 @@
   apt_repository: repo='ppa:git-core/ppa' state=present
   register: add_git_repo
 
+# ubuntu16: no need for nodejs repo
 # http://stackoverflow.com/a/16303380/835696
 - name: Add git nodejs repo
-  apt_repository: repo='ppa:chris-lea/node.js' state=present
+  apt_repository: repo='ppa:chris-lea/node.js' state=absent
   register: add_nodejs_repo
 
+# ubuntu16: no need for gradle repo
 - name: Add gradle repo
-  apt_repository: repo='ppa:cwchien/gradle' state=present
+  apt_repository: repo='ppa:cwchien/gradle' state=absent
   register: add_gradle_repo
 
 - name: Add PostreSQL apt repository
@@ -49,6 +51,7 @@
     - mailutils
     - ntp
     - nodejs
+    - npm
     - at
     - screen
     - gettext
@@ -63,6 +66,14 @@
     - tmux
     - unzip
     - iotop
+
+# ubuntu16: node -- nodejs
+- name: Symlink node to nodejs
+  sudo: yes
+  file:
+    src: /usr/bin/nodejs
+    dest: /usr/bin/node
+    state: link
 
 - name: Set NPM registry
   command: 'npm config set registry http://registry.npmjs.org/'
