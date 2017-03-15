@@ -63,13 +63,13 @@
   hosts: riakcs
   roles:
     - {role: riakcs/install, name: riak}
-    - {role: riakcs/install, name: riakcs, service: riak-cs}
+    - {role: riakcs/install_riakcs, name: riakcs, service: riak-cs}
 
 - name: Install Stanchion
   sudo: True
   hosts: stanchion
   roles:
-    - {role: riakcs/install, name: stanchion}
+    - {role: riakcs/install_stanchion, name: stanchion}
 
 - name: Configure and start Riak
   # Riak CS must be installed before Riak can be started
@@ -78,11 +78,12 @@
   roles:
     - role: riakcs/configure
       name: riak
-      drop_conf: advanced.config
+      extra_conf: advanced.config
       data_dirs:
         - "{{ riak_data_dir }}"
         - "{{ riak_ring_dir }}"
         - "{{ riak_data_root_leveldb }}"
+        - "{{ riak_data_root_blocks }}"
       when: _force_riak_config | bool
 
 - name: Join Riak [CS] nodes to cluster
@@ -99,6 +100,7 @@
   roles:
     - role: riakcs/configure
       name: stanchion
+      extra_conf: ""
       ulimit_n: 4096
       data_dirs: [ "{{ stanchion_data_dir }}" ]
 
@@ -106,7 +108,7 @@
   sudo: True
   hosts: riakcs
   roles:
-    - {role: riakcs/configure, name: riakcs, service: riak-cs}
+    - {role: riakcs/configure, name: riakcs, service: riak-cs, extra_conf: ""}
 
 - name: Create admin user
   sudo: True

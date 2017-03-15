@@ -90,14 +90,14 @@ anonymous_user_creation = off
 ## 
 ## Acceptable values:
 ##   - text
-admin.key = {{ hostvars[riakcs_control].get("riak_key", "not-set") }}
+admin.key = {{ hostvars[riakcs_control].get("riak_key", "admin-key") }}
 
 ## 
 ## Default: admin-secret
 ## 
 ## Acceptable values:
 ##   - text
-admin.secret = {{ hostvars[riakcs_control].get("riak_secret", "not-set") }}
+admin.secret = {{ hostvars[riakcs_control].get("riak_secret", "admin-secret") }}
 
 ## Root host name which Riak CS accepts.
 ## Your CS bucket at s3.example.com will be accessible

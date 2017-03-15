@@ -4,6 +4,20 @@
 
 - set_fact: conf_path={{ hostvars[inventory_hostname].get(name + '_conf', defaults[name + '_conf']) }}
 
+# Sets ulimit for systemd
+- name: Creates systemdconfig directory for {{ name }}
+  file: 
+    path: "/etc/systemd/system/{{ name }}.service.d/"
+    state: directory
+
+- name: Template for limits.conf for {{ name }}
+  template:
+    src:  "{{ name }}.limits.conf"
+    dest: "/etc/systemd/system/{{ name }}.service.d/limits.conf"
+
+- name: Reload systemd for {{ name }}
+  raw: /bin/systemctl daemon-reload
+
 - name: Create {{ name }} data dirs
   file: >
     path="{{ item }}"
@@ -38,6 +52,16 @@
     group=riak
     mode=0640
   notify: restart {{ name }}
+
+- name: Set {{ name }} extra conf
+  template: >
+    src={{ extra_conf }}.j2
+    dest={{ conf_path | dirname }}/{{ extra_conf }}
+    owner=root
+    group=riak
+    mode=0640
+  notify: restart {{ name }}
+  when: extra_conf != ""
 
 - name: Drop {{ name }} {{ drop_conf }}
   file: >
