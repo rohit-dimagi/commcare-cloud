@@ -497,4 +497,8 @@ localsettings:
         - 'sentry'
       level: 'ERROR'
       propagate: True
+    celery.task:
+        - 'sentry'
+      level: 'ERROR'
+      propagate: True
   CELERY_SEND_TASK_ERROR_EMAILS: False
