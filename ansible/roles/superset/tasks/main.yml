@@ -22,15 +22,24 @@
     - "{{ superset_home }}"
 
 - name: Upgrade setuptools
+  sudo: "{{ cchq_user }}"
   pip:
     name: six
     state: latest
     virtualenv: "{{ superset_virtualenv }}"
 
 - name: Install superset
+  sudo: "{{ cchq_user }}"
   pip:
     name: superset
     version: 0.18.5
+    virtualenv: "{{ superset_virtualenv }}"
+
+- name: Install psycopg2
+  sudo: "{{ cchq_user }}"
+  pip:
+    name: psycopg2
+    version: 2.7.1
     virtualenv: "{{ superset_virtualenv }}"
 
 # Need to create fabmanager admin
