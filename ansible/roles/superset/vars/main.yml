@@ -1,0 +1,2 @@
+superset_home: "{{ www_home }}/superset"
+superset_virtualenv: "{{ superset_home }}/venv"

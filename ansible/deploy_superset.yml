@@ -1,0 +1,7 @@
+- name: Superset Setup
+  hosts:
+    - superset
+  sudo: yes
+  roles:
+    - {role: superset, tags: superset}
+

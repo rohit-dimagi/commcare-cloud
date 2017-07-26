@@ -1,0 +1,33 @@
+- name: Install superset packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  sudo: yes
+  with_items:
+    - libsasl2-dev
+    - libldap2-dev
+    # Other deps are covered in the common installs but include:
+    # build-essential libssl-dev libffi-dev python-dev python-pip
+
+
+- name: Create superset directories
+  sudo: yes
+  file:
+    path: "{{ item }}"
+    owner: "{{ cchq_user }}"
+    group: "{{ cchq_user }}"
+    mode: 0755
+  with_items:
+    - "{{ superset_home }}"
+
+- name: Upgrade setuptools
+  pip:
+    name: six
+    state: latest
+    virtualenv: "{{ superset_virtualenv }}"
+
+- name: Install superset
+  pip:
+    name: superset
+    version: 0.18.5
+    virtualenv: "{{ superset_virtualenv }}"
