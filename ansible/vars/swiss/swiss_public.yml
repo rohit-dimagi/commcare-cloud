@@ -71,9 +71,12 @@ postgresql_dbs:
   - name: commcarehq_ucr
     django_alias: ucr
     django_migrate: False
+    host: "{{ groups.postgresql.0 }}"
   - name: "{{ localsettings.PG_DATABASE_NAME }}"
     django_alias: default
+    host: "{{ groups.postgresql.0 }}"
   - name: "{{ formplayer_db_name }}"
+    host: "{{ groups.postgresql.0 }}"
 
 redis_max_memory: 4096mb
 redis_logfile: '/var/log/redis/redis-server.log'
