@@ -21,6 +21,7 @@ postgresql_work_mem: '1MB'
 postgresql_shared_buffers: '1024MB'
 postgresql_max_stack_depth: '2MB'
 postgresql_effective_cache_size: '128MB'
+postgresql_log_min_duration_statement: 300
 pgbouncer_max_connections: 100
 pgbouncer_default_pool: 15
 pgbouncer_reserve_pool: 4
