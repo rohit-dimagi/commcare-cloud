@@ -87,6 +87,7 @@ postgres_users: "{{ secrets.POSTGRES_USERS }}"
 postgresql_shared_buffers: '10GB'
 postgresql_max_stack_depth: '6MB'
 postgresql_effective_cache_size: '32GB'
+postgresql_log_min_duration_statement: 2000
 postgresql_max_connections: 600
 postgresql_checkpoint_segments: 32
 pgbouncer_max_connections: 1600
