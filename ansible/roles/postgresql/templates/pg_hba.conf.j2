@@ -40,6 +40,8 @@ host{% if postgresql_ssl_enabled %}ssl{% endif %}    {{ db.name }}    {{ user.us
 {% if db.get('host', localsettings.PG_DATABASE_HOST) == inventory_hostname or db.get('host', localsettings.PG_DATABASE_HOST) == hot_standby_master|default(None) or is_monolith|bool %}
 {% if host | ipaddr %}
 host   {{ db.name }}	{{ db.get('user', localsettings.PG_DATABASE_USER) }}	{{ host }}/32   md5
+{% elif hostvars[host]['ansible_eth0']['ipv4']['address'] %}
+host   {{ db.name }}	{{ db.get('user', localsettings.PG_DATABASE_USER) }}	{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}/32   md5
 {% else %}
 host   {{ db.name }}	{{ db.get('user', localsettings.PG_DATABASE_USER) }}	{{ lookup('dig', host, wantlist=True)[0] }}/32	md5
 {% endif %}
