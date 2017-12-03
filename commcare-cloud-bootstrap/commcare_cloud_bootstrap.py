@@ -176,11 +176,12 @@ def copy_default_vars(env, aws_config):
     new_dir = os.path.join(vars_dir, env)
     if os.path.exists(vars_dir) and os.path.exists(template_dir) and not os.path.exists(new_dir):
         os.makedirs(new_dir)
-        shutil.copyfile(os.path.join(template_dir, 'dev_private.yml'),
-                        os.path.join(new_dir, '{env}_vault.yml'.format(env=env)))
+        vars_public = os.path.join(new_dir, '{env}_public.yml'.format(env=env))
+        vars_vault = os.path.join(new_dir, '{env}_vault.yml'.format(env=env))
+        shutil.copyfile(os.path.join(template_dir, 'dev_private.yml'), vars_vault)
         shutil.copyfile(os.path.join(template_dir, 'dev_public.yml'),
-                        os.path.join(new_dir, '{env}_public.yml'.format(env=env)))
-        with open(os.path.join(new_dir, '{env}_public.yml'.format(env=env)), 'a') as f:
+                        vars_public)
+        with open(vars_public, 'a') as f:
             f.write('commcare_cloud_root_user: ubuntu\n')
             f.write('commcare_cloud_pem: {pem}\n'.format(pem=aws_config.pem))
             f.write('commcare_cloud_strict_host_key_checking: no\n')
