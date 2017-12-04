@@ -8,6 +8,7 @@
     owner: postgres
     mode: 0600
     backup: yes
+  when: is_pg_standby
 
 - name: Copy postgres backup script
   become: yes
