@@ -176,15 +176,14 @@ def save_inventory(env, inventory):
 
 def copy_default_vars(env, aws_config):
     vars_dir = os.path.expanduser('~/.commcare-cloud/vars')
-    template_dir = os.path.join(vars_dir, 'dev')
+    template_dir = os.path.join(vars_dir, '.commcare-cloud-bootstrap')
     new_dir = os.path.join(vars_dir, env)
     if os.path.exists(vars_dir) and os.path.exists(template_dir) and not os.path.exists(new_dir):
         os.makedirs(new_dir)
         vars_public = os.path.join(new_dir, '{env}_public.yml'.format(env=env))
         vars_vault = os.path.join(new_dir, '{env}_vault.yml'.format(env=env))
-        shutil.copyfile(os.path.join(template_dir, 'dev_private.yml'), vars_vault)
-        shutil.copyfile(os.path.join(template_dir, 'dev_public.yml'),
-                        vars_public)
+        shutil.copyfile(os.path.join(template_dir, 'private.yml'), vars_vault)
+        shutil.copyfile(os.path.join(template_dir, 'public.yml'), vars_public)
         with open(vars_public, 'a') as f:
             f.write('commcare_cloud_root_user: ubuntu\n')
             f.write('commcare_cloud_pem: {pem}\n'.format(pem=aws_config.pem))
