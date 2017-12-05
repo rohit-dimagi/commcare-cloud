@@ -1,1 +1,10 @@
 couchdb_dir: "/usr/local/couchdb2/couchdb"
+# This variable lets hosts access each others' preferred couch host via a hostvar
+# For example to bind on the private interface (if different from inventory_hostname)
+# include the following in your public vars file
+#
+#    couchdb_bind:
+#      ty: static
+#      host: '{{ hostvars[inventory_hostname]["ansible_eth0"]["ipv4"]["address"] }}'
+#
+couchdb_bind_host: "{{ couchdb_bind.host or inventory_hostname }}"
