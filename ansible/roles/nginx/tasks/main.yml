@@ -1,6 +1,6 @@
 ---
 - debug:
-    msg: "--------------- Running nginx role. action={{action}}, site_name={{site_name}} ----------------------"
+    msg: "--------------- Running nginx role. action={{action}}, site_name={{site_name|default('')}} ----------------------"
 
 - name: Install Nginx
   include: install.yml
