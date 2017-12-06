@@ -316,3 +316,7 @@ localsettings:
   XFORMS_PLAYER_URL: "http://{{ groups.touchforms.0 }}:4444"
   FORMPLAYER_URL: "http://{{ groups.touchforms.0 }}:8181"
 #  ENABLE_DRACONIAN_SECURITY_FEATURES: yes
+
+
+riak_backend: "leveldb"
+riak_ring_size: 128
