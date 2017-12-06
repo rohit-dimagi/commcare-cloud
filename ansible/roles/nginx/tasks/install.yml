@@ -73,7 +73,7 @@
   become: yes
   copy:
     content: '{{ nginx_combined_cert_value }}'
-    dest: "{{ ssl_certs_dir }}/{{ nginx_ssl_cert }}"
+    dest: "{{ ssl_certs_dir }}/{{ cchq_nginx_ssl_cert }}"
     mode: 0400
     owner: root
     group: root
@@ -85,7 +85,7 @@
   become: yes
   copy:
     src: "{{ nginx_combined_cert_file }}"
-    dest: "{{ ssl_certs_dir }}/{{ nginx_ssl_cert }}"
+    dest: "{{ ssl_certs_dir }}/{{ cchq_nginx_ssl_cert }}"
     mode: 0400
     owner: root
     group: root
@@ -97,7 +97,7 @@
   become: yes
   copy:
     content: "{{ nginx_key_value }}"
-    dest: "{{ ssl_keys_dir }}/{{ nginx_ssl_key }}"
+    dest: "{{ ssl_keys_dir }}/{{ cchq_nginx_ssl_key }}"
     mode: 0400
     owner: root
     group: root
@@ -110,7 +110,7 @@
   become: yes
   copy:
     src: "{{ nginx_key_file }}"
-    dest: "{{ ssl_keys_dir }}/{{ nginx_ssl_key }}"
+    dest: "{{ ssl_keys_dir }}/{{ cchq_nginx_ssl_key }}"
     mode: 0400
     owner: root
     group: root
