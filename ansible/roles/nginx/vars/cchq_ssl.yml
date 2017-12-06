@@ -1,4 +1,7 @@
 ---
+nginx_ssl_cert: "{{ cchq_nginx_ssl_cert }}"
+nginx_ssl_key:  "{{ cchq_nginx_ssl_key }}"
+
 nginx_sites:
 - server:
    balancers:
