@@ -1,4 +1,7 @@
 ---
+- debug:
+    msg: "--------------- Running nginx role. action={{action}}, site_name={{site_name}} ----------------------"
+
 - name: Install Nginx
   include: install.yml
   when: action == 'install'
