@@ -263,6 +263,19 @@ class BootstrapUsers(_AnsiblePlaybookAlias):
         AnsiblePlaybook.run(args, unknown_args)
 
 
+class DeployFullStack(_AnsiblePlaybookAlias):
+    command = 'deploy-full-stack'
+    help = (
+        "Deploy full stack to machines that aren't yet live and "
+        "have never been deployed to. "
+    )
+
+    @staticmethod
+    def run(args, unknown_args):
+        args.playbook = 'deploy_stack.yml'
+        AnsiblePlaybook.run(args, unknown_args)
+
+
 class RunShellCommand(object):
     command = 'run-shell-command'
     help = (
@@ -388,6 +401,7 @@ STANDARD_ARGS = [
     UpdateConfig,
     RestartElasticsearch,
     BootstrapUsers,
+    DeployFullStack,
     RunShellCommand,
 ]
 
