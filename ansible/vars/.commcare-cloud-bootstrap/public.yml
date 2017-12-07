@@ -196,6 +196,8 @@ couchdb_bind:
   ty: static
   host: '{{ hostvars[inventory_hostname]["ansible_eth0"]["ipv4"]["address"] }}'
 
+riak_host: '{{ hostvars[inventory_hostname]["ansible_eth0"]["ipv4"]["address"] }}'
+
 couch_dbs:
   default:
     host: "{{ groups.couchdb2.0 }}"
