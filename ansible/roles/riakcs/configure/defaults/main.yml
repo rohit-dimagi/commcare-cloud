@@ -21,6 +21,7 @@ riak_backend: "leveldb"
 
 # `riakcs_port` is defined in group_vars/all.yml
 
+riak_host: "{{ riak_host || inventory_hostname|ipaddr || lookup('dig', inventory_hostname, wantlist=True)[0] }}"
 riak_port: 8087
 riak_data_root_leveldb: "{{ riak_data_dir }}/leveldb"
 riak_data_root_bitcask: "{{ riak_data_dir }}/bitcask"
