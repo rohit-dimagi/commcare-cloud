@@ -409,10 +409,10 @@ icds-new:
         concurrency: 5
         num_workers: 10
     '10.247.164.42':
-      # reminder_queue:
-      #   pooling: gevent
-      #   concurrency: 5
-      #   num_workers: 6
+       reminder_queue:
+         pooling: gevent
+         concurrency: 5
+         num_workers: 6
       reminder_rule_queue:
         concurrency: 1
         max_tasks_per_child: 1
@@ -420,10 +420,10 @@ icds-new:
         concurrency: 3
         max_tasks_per_child: 1
     '10.247.164.43':
-      # sms_queue:
-      #   pooling: gevent
-      #   concurrency: 10
-      #   num_workers: 4
+       sms_queue:
+         pooling: gevent
+         concurrency: 10
+         num_workers: 4
       async_restore_queue:
         concurrency: 4
       ucr_indicator_queue:
