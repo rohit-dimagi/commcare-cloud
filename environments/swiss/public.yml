@@ -89,6 +89,14 @@ couch_dbs:
     password: "{{ localsettings_private.COUCH_PASSWORD }}"
     is_https: False
 
+
+CELERY_FLOWER_URL: "http://{{ groups.celery.0 }}:5555"
+CELERY_PERIODIC_QUEUE: 'celery_periodic'
+CELERY_REMINDER_CASE_UPDATE_QUEUE: reminder_case_update_queue
+CELERY_REMINDER_RULE_QUEUE: reminder_rule_queue
+CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
+
+
 localsettings:
   ALLOWED_HOSTS:
     - swiss.commcarehq.org
@@ -106,11 +114,6 @@ localsettings:
   BITLY_LOGIN: "{{ localsettings_private.BITLY_LOGIN }}"
   BOOKKEEPER_CONTACT_EMAILS: "{{ localsettings_private.BOOKKEEPER_CONTACT_EMAILS }}"
   BROKER_URL: 'amqp://{{ secrets.AMQP_USER }}:{{ secrets.AMQP_PASSWORD }}@{{ AMQP_HOST }}:5672/{{ AMQP_NAME }}'
-  CELERY_FLOWER_URL: "http://{{ groups.celery.0 }}:5555"
-  CELERY_PERIODIC_QUEUE: 'celery_periodic'
-  CELERY_REMINDER_CASE_UPDATE_QUEUE: reminder_case_update_queue
-  CELERY_REMINDER_RULE_QUEUE: reminder_rule_queue
-  CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
   CLOUDCARE_BASE_URL: http://localhost:9010
   COUCH_CACHE_DOCS: True
   COUCH_CACHE_VIEWS: True

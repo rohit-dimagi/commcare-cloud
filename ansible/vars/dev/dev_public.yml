@@ -223,6 +223,12 @@ couch_dbs:
     password: "{{ localsettings_private.COUCH_PASSWORD }}"
     is_https: False
 
+
+CELERY_FLOWER_URL: "http://{{ groups.celery.0 }}:5555"
+CELERY_PERIODIC_QUEUE: 'celery_periodic'
+CELERY_RESULT_BACKEND: 'database'
+
+
 localsettings:
   ALLOWED_HOSTS:
     - localhost
@@ -238,12 +244,6 @@ localsettings:
   BITLY_LOGIN: "{{ localsettings_private.BITLY_LOGIN }}"
 #  BOOKKEEPER_CONTACT_EMAILS: "{{ localsettings_private.BOOKKEEPER_CONTACT_EMAILS }}"
   BROKER_URL: 'amqp://{{ AMQP_USER }}:{{ AMQP_PASSWORD }}@{{ AMQP_HOST }}:5672/{{ AMQP_NAME }}'
-  CELERY_FLOWER_URL: "http://{{ groups.celery.0 }}:5555"
-  CELERY_PERIODIC_QUEUE: 'celery_periodic'
-#  CELERY_REMINDER_CASE_UPDATE_QUEUE:
-#  CELERY_REMINDER_RULE_QUEUE:
-#  CELERY_REPEAT_RECORD_QUEUE:
-  CELERY_RESULT_BACKEND: 'database'
 #  COUCH_CACHE_DOCS:
 #  COUCH_CACHE_VIEWS:
   COUCH_MONITORING_USERNAME: commcarehq
