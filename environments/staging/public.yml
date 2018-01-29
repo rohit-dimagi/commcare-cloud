@@ -124,6 +124,7 @@ couch_dbs:
     is_https: True
 
 
+# Don't run CELERY_PERIODIC_QUEUE at all
 CELERY_PERIODIC_QUEUE: 'celery_null'
 CELERY_REMINDER_CASE_UPDATE_QUEUE:
 CELERY_REMINDER_RULE_QUEUE:
