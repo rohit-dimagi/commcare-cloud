@@ -197,7 +197,6 @@ couch_dbs:
     is_https: False
 
 
-CELERY_REMINDER_RULE_QUEUE: 'reminder_rule_queue'
 CELERY_REPEAT_RECORD_QUEUE: 'repeat_record_queue'
 CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
 CELERY_TIMEZONE: 'Asia/Kolkata'

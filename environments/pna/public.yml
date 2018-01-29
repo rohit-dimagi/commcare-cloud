@@ -162,7 +162,6 @@ AMQP_NAME: commcarehq
 shared_drive_enabled: false
 
 
-CELERY_REMINDER_RULE_QUEUE: reminder_rule_queue
 CELERY_REPEAT_RECORD_QUEUE:
 CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
 
