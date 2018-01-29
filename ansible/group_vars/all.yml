@@ -163,3 +163,4 @@ supervisor_http_username: "{{ secrets.SUPERVISOR_HTTP_USERNAME | default(None) }
 
 
 CELERY_FLOWER_URL: "http://{{ groups.celery.0 }}:5555"
+CELERY_PERIODIC_QUEUE: 'celery_periodic'
