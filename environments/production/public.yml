@@ -142,9 +142,6 @@ couch_dbs:
     is_https: True
 
 
-CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
-
-
 localsettings:
   ALLOWED_HOSTS:
     - www.commcarehq.org

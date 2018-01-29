@@ -96,7 +96,6 @@ shared_drive_enabled: false
 
 
 CELERY_REPEAT_RECORD_QUEUE:
-CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
 
 
 localsettings:

@@ -157,7 +157,6 @@ couchdb_cluster_settings:
 
 
 CELERY_FLOWER_URL: "http://{{ groups.celery.1 }}:5555"
-CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
 
 
 localsettings:
