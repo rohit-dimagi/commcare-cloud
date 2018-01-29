@@ -252,7 +252,6 @@ couch_dbs:
 
 
 CELERY_FLOWER_URL: "http://{{ groups.celery0.0 }}:5555"
-CELERY_REPEAT_RECORD_QUEUE: 'repeat_record_queue'
 CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
 CELERY_TIMEZONE: 'Asia/Kolkata'
 

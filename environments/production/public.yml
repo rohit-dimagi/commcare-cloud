@@ -142,7 +142,6 @@ couch_dbs:
     is_https: True
 
 
-CELERY_REPEAT_RECORD_QUEUE: 'repeat_record_queue'
 CELERY_RESULT_BACKEND: 'djcelery.backends.database:DatabaseBackend'
 
 
