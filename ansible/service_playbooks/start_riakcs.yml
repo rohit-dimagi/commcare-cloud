@@ -1,0 +1,22 @@
+- name: start riakcs
+  hosts: riakcs
+  tasks:
+    - name: start riak
+      service:
+        name: riak
+        state: started
+      when: 'riak' in subservices
+    - name: start riak-cs
+      service:
+        name: riak-cs
+        state: started
+      when: 'riak-cs' in subservices
+
+- name: start stanchion
+  hosts: stanchion
+  tasks:
+    - name: start stanchion
+      service:
+        name: riak
+        state: started
+      when: 'stanchion' in subservices
