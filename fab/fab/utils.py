@@ -60,7 +60,7 @@ class DeployMetadata(object):
 
         pattern = ".*-{}-.*".format(re.escape(self._environment))
         github = Github()
-        repo = github.repository('dimagi', 'commcare-hq')
+        repo = github.get_organization('dimagi').get_repo('commcare-hq')
         for tag in repo.tags(self._max_tags):
             if re.match(pattern, tag.name):
                 self._last_tag = tag.name
