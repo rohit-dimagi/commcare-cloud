@@ -74,11 +74,11 @@ class DeployMetadata(object):
         tag_name = "{}-{}-deploy".format(self.timestamp, self._environment)
         msg = "{} deploy at {}".format(self._environment, self.timestamp)
         user = github.get_user()
-        repo.create_tag(tag=tag_name,message=msg,sha=self.deploy_ref,obj_type='commit', tagger={'name': user.login, 'email': user.email, 'date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),}
+        tag = repo.create_git_tag(tag=tag_name,message=msg,sha=self.deploy_ref,obj_type='commit', tagger={'name': user.login, 'email': user.email, 'date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),}
         )
         self._deploy_tag = tag_name
 
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
 
     def _offline_tag_commit(self):
         commit = local('cd {}/commcare-hq && git show-ref --hash --heads {}'.format(
