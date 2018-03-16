@@ -74,7 +74,7 @@ class DeployMetadata(object):
         tag_name = "{}-{}-deploy".format(self.timestamp, self._environment)
         msg = "{} deploy at {}".format(self._environment, self.timestamp)
         user = github.get_user()
-        repo.create_tag(
+        tag = repo.create_tag(
              tag=tag_name,
              message=msg,
              object=self.deploy_ref,
