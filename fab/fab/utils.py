@@ -74,12 +74,8 @@ class DeployMetadata(object):
         tag_name = "{}-{}-deploy".format(self.timestamp, self._environment)
         msg = "{} deploy at {}".format(self._environment, self.timestamp)
         user = github.get_user()
-        tag = repo.create_git_tag(
-             tag=tag_name,
-             message=msg,
-             object=self.deploy_ref,
-             type='commit',
-        )
+        import pdb; pdb.set_trace()
+        tag = repo.create_git_tag(tag=tag_name, message=msg, object=self.deploy_ref, type='commit')
         self._deploy_tag = tag_name
 
         import pdb; pdb.set_trace()
