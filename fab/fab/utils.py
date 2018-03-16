@@ -9,9 +9,8 @@ from fabric.operations import sudo
 from fabric.context_managers import settings
 from fabric.api import local
 import re
-from getpass import getpass
 
-from github3 import login
+from github import Github
 from fabric.api import execute, env
 from fabric.colors import magenta
 
@@ -22,11 +21,6 @@ from .const import (
     DATE_FMT,
     OFFLINE_STAGING_DIR,
 )
-
-from six.moves import input
-
-
-global_github = None
 
 
 def execute_with_timing(fn, *args, **kwargs):
@@ -65,7 +59,7 @@ class DeployMetadata(object):
             return
 
         pattern = ".*-{}-.*".format(re.escape(self._environment))
-        github = _get_github()
+        github = Github()
         repo = github.repository('dimagi', 'commcare-hq')
         for tag in repo.tags(self._max_tags):
             if re.match(pattern, tag.name):
@@ -79,19 +73,12 @@ class DeployMetadata(object):
             )))
         tag_name = "{}-{}-deploy".format(self.timestamp, self._environment)
         msg = "{} deploy at {}".format(self._environment, self.timestamp)
-        user = github.me()
-        repo.create_tag(
-            tag=tag_name,
-            message=msg,
-            sha=self.deploy_ref,
-            obj_type='commit',
-            tagger={
-                'name': user.login,
-                'email': user.email or '{}@dimagi.com'.format(user.login),
-                'date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
-            }
+        user = github.get_user()
+        repo.create_tag(tag=tag_name,message=msg,sha=self.deploy_ref,obj_type='commit', tagger={'name': user.login, 'email': user.email, 'date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),}
         )
         self._deploy_tag = tag_name
+
+        # import pdb; pdb.set_trace()
 
     def _offline_tag_commit(self):
         commit = local('cd {}/commcare-hq && git show-ref --hash --heads {}'.format(
@@ -134,45 +121,13 @@ class DeployMetadata(object):
             self._deploy_ref = env.code_branch
             return self._deploy_ref
 
-        github = _get_github()
-        repo = github.repository('dimagi', 'commcare-hq')
+        github = Github()
+        repo = github.get_organization('dimagi').get_repo('commcare-hq')
 
         # turn whatever `code_branch` is into a commit hash
-        branch = repo.branch(self._code_branch)
+        branch = repo.get_branch(self._code_branch)
         self._deploy_ref = branch.commit.sha
         return self._deploy_ref
-
-
-def _get_github():
-    """
-    This grabs the dimagi github account and stores the state in a global variable.
-    We do not store it in `env` or `DeployMetadata` so that it's possible to
-    unpickle the `env` object without hitting the recursion limit.
-    """
-    global global_github
-
-    if global_github is not None:
-        return global_github
-    try:
-        from .config import GITHUB_APIKEY
-    except ImportError:
-        print((
-            "You can add a GitHub API key to automate this step:\n"
-            "    $ cp {project_root}/config.example.py {project_root}/config.py\n"
-            "Then edit {project_root}/config.py"
-        ).format(project_root=PROJECT_ROOT))
-        username = input('Github username: ')
-        password = getpass('Github password: ')
-        global_github = login(
-            username=username,
-            password=password,
-        )
-    else:
-        global_github = login(
-            token=GITHUB_APIKEY,
-        )
-
-    return global_github
 
 
 def _get_checkpoint_filename():
