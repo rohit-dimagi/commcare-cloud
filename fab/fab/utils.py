@@ -88,6 +88,7 @@ class DeployMetadata(object):
             type='commit',
         )
         self._deploy_tag = tag_name
+        import pdb; pdb.set_trace()
 
     def _offline_tag_commit(self):
         commit = local('cd {}/commcare-hq && git show-ref --hash --heads {}'.format(
