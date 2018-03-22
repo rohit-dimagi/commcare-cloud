@@ -1,4 +1,5 @@
 from collections import defaultdict
+from copy import copy
 
 from clint.textui import puts, colored
 
@@ -109,27 +110,36 @@ class Service(_AnsiblePlaybookAlias):
             )
         )
 
+    def run(self, args, unknown_args):
+        ServiceRunner(self, args, unknown_args).run()
+
+
+class ServiceRunner(object):
+    def __init__(self, command, args, unknown_args):
+        self.args = args
+        self.unknown_args = unknown_args
+        self.command = command
+
     def get_inventory_group_for_service(self, service, service_group):
         return INVENTORY_GROUP_FOR_SERVICE.get(service, service_group)
 
-    @staticmethod
-    def get_celery_workers_to_work_on(args):
+    def get_celery_workers_to_work_on(self):
         """
         :return:
         workers_by_host: full name of workers per host to work on
         """
-        celery_config = get_celery_workers_config(args.environment)
+        celery_config = get_celery_workers_config(self.args.environment)
         # full name of workers per host to run an action on
         workers_by_host = defaultdict(set)
-        if args.only:
-            for queue_name in args.only.split(','):
+        if self.args.only:
+            for queue_name in self.args.only.split(','):
                 worker_num = None
                 if ':' in queue_name:
                     queue_name, worker_num = queue_name.split(':')
                 for host, celery_worker_names in celery_config[queue_name].items():
                     if worker_num:
                         celery_worker_name = find_celery_worker_name(
-                            args.environment, queue_name, host, worker_num)
+                            self.args.environment, queue_name, host, worker_num)
                         assert celery_worker_name, \
                             "Could not find the celery worker for queue {queue_name} with index {worker_num}".format(
                                 queue_name=queue_name, worker_num=worker_num
@@ -144,31 +154,33 @@ class Service(_AnsiblePlaybookAlias):
                     workers_by_host[host].update(celery_worker_names)
         return workers_by_host
 
-    def run_for_celery(self, service_group, action, args, unknown_args):
+    def run_for_celery(self, service_group, action):
         exit_code = 0
         service = "celery"
-        if action == "status" and not args.only:
+        args = self.args
+        unknown_args = self.unknown_args
+        if action == "status" and not self.args.only:
             args.shell_command = "supervisorctl %s" % action
-            args.inventory_group = self.get_inventory_group_for_service(service, args.service_group)
-            exit_code = RunShellCommand(self.parser).run(args, unknown_args)
+            args.inventory_group = self.get_inventory_group_for_service(service, self.args.service_group)
+            exit_code = RunShellCommand(self.command.parser).run(args, unknown_args)
         else:
-            workers_by_host = self.get_celery_workers_to_work_on(args)
+            workers_by_host = self.get_celery_workers_to_work_on()
             puts(colored.blue("This is going to run the following"))
             for host, workers in workers_by_host.items():
                 puts(colored.green('Host: [' + host + ']'))
                 puts(colored.green("supervisorctl %s %s" % (action, ' '.join(workers))))
 
-            if not ask('Good to go?', strict=True, quiet=args.quiet):
+            if not ask('Good to go?', strict=True, quiet=self.args.quiet):
                 return 0  # exit code
 
             for host, workers in workers_by_host.items():
-                args.inventory_group = self.get_inventory_group_for_service(service, args.service_group)
+                args.inventory_group = self.get_inventory_group_for_service(service, self.args.service_group)
                 # if not applicable for all hosts then limit to a host
                 if host != "*":
                     unknown_args.append('--limit=%s' % host)
                 args.shell_command = "supervisorctl %s %s" % (action, ' '.join(workers))
-                for service in self.services(service_group, args):
-                    exit_code = RunShellCommand(self.parser).run(args, unknown_args)
+                for service in self.services(service_group):
+                    exit_code = RunShellCommand(self.command.parser).run(args, unknown_args)
                     if exit_code is not 0:
                         return exit_code
         return exit_code
@@ -182,20 +194,26 @@ class Service(_AnsiblePlaybookAlias):
         elif service == "formplayer-spring":
             return get_formplayer_spring_instance_name(environment_name)
 
-    def run_supervisor_action_for_service_group(self, service_group, action, args, unknown_args):
+    def run_supervisor_action_for_service_group(self, service_group, action):
         exit_code = 0
-        for service in self.services(service_group, args):
-            args.inventory_group = self.get_inventory_group_for_service(service, args.service_group)
-            supervisor_command_name = self.get_supervisor_program_name(service, args.environment)
+        args = self.args
+        unknown_args = self.unknown_args
+
+        for service in self.services(service_group):
+            args.inventory_group = self.get_inventory_group_for_service(service, self.args.service_group)
+            supervisor_command_name = self.get_supervisor_program_name(service, self.args.environment)
             args.shell_command = "supervisorctl %s %s" % (action, supervisor_command_name)
-            exit_code = RunShellCommand(self.parser).run(args, unknown_args)
+            exit_code = RunShellCommand(self.command.parser).run(args, unknown_args)
             if exit_code is not 0:
                 return exit_code
         return exit_code
 
-    def run_ansible_module_for_service_group(self, service_group, args, unknown_args, inventory_group=None):
+    def run_ansible_module_for_service_group(self, service_group, inventory_group=None):
+        args = self.args
+        unknown_args = self.unknown_args
+
         for service in SERVICES[service_group]:
-            action = args.action
+            action = self.args.action
             state = DESIRED_STATE_FOR_ACTION[action]
             args.inventory_group = (
                 inventory_group or
@@ -204,17 +222,16 @@ class Service(_AnsiblePlaybookAlias):
             args.module_args = "name=%s state=%s" % (
                 ANSIBLE_MODULE_FOR_SERVICE.get(service, service),
                 state)
-            return RunAnsibleModule(self.parser).run(
-                args,
-                unknown_args
-            )
+            return RunAnsibleModule(self.command.parser).run(args, unknown_args)
 
-    def run_ansible_playbook_for_service_group(self, service_group, args, unknown_args):
+    def run_ansible_playbook_for_service_group(self, service_group):
+        args = self.args
+        unknown_args = self.unknown_args
         tags = []
         action = args.action
         state = DESIRED_STATE_FOR_ACTION[action]
         args.playbook = "service_playbooks/%s.yml" % service_group
-        services = self.services(service_group, args)
+        services = self.services(service_group)
         if args.only:
             # for options to act on certain services create tags
             for service in services:
@@ -223,34 +240,33 @@ class Service(_AnsiblePlaybookAlias):
             if tags:
                 unknown_args.append('--tags=%s' % ','.join(tags), )
         unknown_args.extend(['--extra-vars', "desired_state=%s desired_action=%s" % (state, action)])
-        return AnsiblePlaybook(self.parser).run(args, unknown_args)
+        return AnsiblePlaybook(self.command.parser).run(args, unknown_args)
 
-    def run_supervisor_for_service_group(self, service_group, args, unknown_args):
+    def run_supervisor_for_service_group(self, service_group):
         exit_code = 0
         if service_group == "celery":
-            exit_code = self.run_for_celery(service_group, args.action, args, unknown_args)
+            exit_code = self.run_for_celery(service_group, self.args.action)
         elif service_group in ["webworkers", "formplayer", "touchforms"]:
-            exit_code = self.run_supervisor_action_for_service_group(service_group, args.action, args, unknown_args)
+            exit_code = self.run_supervisor_action_for_service_group(service_group, self.args.action)
         return exit_code
 
-    def services(self, service_group, args):
-        if service_group != 'celery' and args.only:
-            return args.only.split(',')
+    def services(self, service_group):
+        if service_group != 'celery' and self.args.only:
+            return self.args.only.split(',')
         else:
             return SERVICES[service_group]
 
-    def run_for_es(self, args, unknown_args):
-        action = args.action
+    def run_for_es(self):
+        action = self.args.action
         if action == "restart":
-            return RestartElasticsearch(self.parser).run(args, unknown_args)
+            return RestartElasticsearch(self.command.parser).run(self.args, self.unknown_args)
         else:
-            return self.run_ansible_module_for_service_group("es", args, unknown_args)
+            return self.run_ansible_module_for_service_group("es")
 
-    @staticmethod
-    def ensure_permitted_celery_only_options(args):
-        celery_config = get_celery_workers_config(args.environment)
+    def ensure_permitted_celery_only_options(self):
+        celery_config = get_celery_workers_config(self.args.environment)
         # full name of workers per host to run an action on
-        if args.only:
+        if self.args.only:
             for queue_name in args.only.split(','):
                 if ':' in queue_name:
                     queue_name, woker_num = queue_name.split(':')
@@ -259,68 +275,71 @@ class Service(_AnsiblePlaybookAlias):
                         queue_name, celery_config.keys()
                     )
 
-    def ensure_permitted_only_options(self, service_group, args):
-        services = self.services(service_group, args)
+    def ensure_permitted_only_options(self, service_group):
+        services = self.services(service_group)
         for service in services:
             if service == "celery":
-                self.ensure_permitted_celery_only_options(args)
+                self.ensure_permitted_celery_only_options()
             else:
                 assert service in SERVICES[service_group], \
                     ("%s not allowed. Please use from %s for --only option" %
                      (service, SERVICES[service_group])
                      )
 
-    def run_status_for_service_group(self, service_group, args, unknown_args):
+    def run_status_for_service_group(self, service_group):
         exit_code = 0
+        args = self.args
+        unknown_args = self.unknown_args
+
         args.silence_warnings = True
         if service_group in ["touchforms", "formplayer", "webworkers"]:
-            exit_code = self.run_supervisor_action_for_service_group(service_group, 'status', args, unknown_args)
+            exit_code = self.run_supervisor_action_for_service_group(service_group, 'status')
         else:
-            for service in self.services(service_group, args):
+            for service in self.services(service_group):
                 if service == "celery":
-                    exit_code = self.run_for_celery(service_group, 'status', args, unknown_args)
+                    exit_code = self.run_for_celery(service_group, 'status')
                 else:
                     if service == "redis":
                         args.shell_command = "redis-cli ping"
                     else:
                         args.shell_command = "service %s status" % SERVICE_PACKAGES_FOR_SERVICE.get(service, service)
-                    args.inventory_group = self.get_inventory_group_for_service(service, args.service_group)
-                    exit_code = RunShellCommand(self.parser).run(args, unknown_args)
+                    args.inventory_group = self.get_inventory_group_for_service(service, self.args.service_group)
+                    exit_code = RunShellCommand(self.command.parser).run(args, unknown_args)
                 if exit_code is not 0:
                     # if any service status check didn't go smoothly exit right away
                     return exit_code
         return exit_code
 
-    def perform_action(self, service_group, args, unknown_args):
+    def perform_action(self, service_group):
         exit_code = 0
         if service_group in ['proxy', 'redis', 'couchdb2', 'postgresql', 'rabbitmq']:
-            exit_code = self.run_ansible_module_for_service_group(service_group, args, unknown_args)
+            exit_code = self.run_ansible_module_for_service_group(service_group)
         elif service_group in ['riakcs', 'kafka']:
-            exit_code = self.run_ansible_playbook_for_service_group(service_group, args, unknown_args)
+            exit_code = self.run_ansible_playbook_for_service_group(service_group)
         elif service_group == "stanchion":
-            if not args.only:
-                args.only = "stanchion"
-            exit_code = self.run_ansible_playbook_for_service_group('riakcs', args, unknown_args)
+            if not self.args.only:
+                self.args.only = "stanchion"
+            exit_code = self.run_ansible_playbook_for_service_group('riakcs')
         elif service_group == "es":
-            exit_code = self.run_for_es(args, unknown_args)
+            exit_code = self.run_for_es()
         elif service_group == "pg_standby":
-            exit_code = self.run_ansible_module_for_service_group('pg_standby', args, unknown_args,
+            exit_code = self.run_ansible_module_for_service_group('pg_standby',
                                                                   inventory_group="pg_standby")
         elif service_group in ["celery", "webworkers", "formplayer", "touchforms"]:
-            exit_code = self.run_supervisor_for_service_group(service_group, args, unknown_args)
+            exit_code = self.run_supervisor_for_service_group(service_group)
         return exit_code
 
-    def run(self, args, unknown_args):
-        service_group = args.service_group
-        args.remote_user = 'ansible'
-        args.become = True
-        args.become_user = False
-        args.silence_warnings = True
-        if args.only:
-            self.ensure_permitted_only_options(service_group, args)
-        action = args.action
+    def run(self):
+        service_group = self.args.service_group
+        self.args.remote_user = 'ansible'
+        self.args.become = True
+        self.args.become_user = False
+        self.args.silence_warnings = True
+        if self.args.only:
+            self.ensure_permitted_only_options(service_group)
+        action = self.args.action
         if action == "status":
-            exit_code = self.run_status_for_service_group(service_group, args, unknown_args)
+            exit_code = self.run_status_for_service_group(service_group)
         else:
-            exit_code = self.perform_action(service_group, args, unknown_args)
+            exit_code = self.perform_action(service_group)
         return exit_code
