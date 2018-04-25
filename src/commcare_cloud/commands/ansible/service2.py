@@ -219,6 +219,28 @@ class Nginx(AnsibleService):
     inventory_groups = ['proxy']
 
 
+class Elasticsearch(AnsibleService):
+    name = 'elasticsearch'
+    inventory_groups = ['elasticsearch']
+
+
+class Couchdb(AnsibleService):
+    name = 'couchdb'
+    inventory_groups = ['couchdb2']
+
+
+class RabbitMq(AnsibleService):
+    name = 'rabbitmq'
+    inventory_groups = ['rabbitmq']
+    service_name = 'rabbitmq-server'
+
+
+class Redis(AnsibleService):
+    name = 'redis'
+    inventory_groups = ['redis']
+    service_name = 'redis-server'
+
+
 class Riakcs(MultiAnsibleService):
     name = 'riakcs'
     inventory_groups = ['riakcs', 'stanchion']
