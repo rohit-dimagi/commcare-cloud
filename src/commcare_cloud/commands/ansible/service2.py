@@ -206,7 +206,7 @@ class MultiAnsibleService(SubServicesMixin, AnsibleService):
 
 class Postgresql(AnsibleService):
     name = 'postgresql'
-    inventory_groups = ['postgresql']
+    inventory_groups = ['postgresql', 'pg_standby']
 
 
 class Pgbouncer(AnsibleService):
