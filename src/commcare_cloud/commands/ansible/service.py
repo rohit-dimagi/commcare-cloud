@@ -47,18 +47,22 @@ class ServiceBase(six.with_metaclass(ABCMeta)):
     def run(self, action, host_pattern=None, process_pattern=None):
         if action == 'help':
             self.print_help()
-        else:
-            try:
-                self.execute_action(action, host_pattern, process_pattern)
-            except NoHostsMatch:
-                only = limit = ''
-                if process_pattern:
-                    only = " '--only={}'".format(process_pattern)
-                if host_pattern:
-                    limit = " '--limit={}'".format(host_pattern)
+            return 0
 
-                puts(colored.red("No '{}' hosts match{}{}".format(self.name, limit, only)))
-                return 1
+        try:
+            if action == 'status':
+                self.check_status(host_pattern, process_pattern)
+            else:
+                self.execute_action(action, host_pattern, process_pattern)
+        except NoHostsMatch:
+            only = limit = ''
+            if process_pattern:
+                only = " '--only={}'".format(process_pattern)
+            if host_pattern:
+                limit = " '--limit={}'".format(host_pattern)
+
+            puts(colored.red("No '{}' hosts match{}{}".format(self.name, limit, only)))
+            return 1
 
     def print_help(self):
         puts(colored.green("Additional help for service '{}'".format(self.name)))
@@ -86,6 +90,10 @@ class ServiceBase(six.with_metaclass(ABCMeta)):
 
     @abstractmethod
     def execute_action(self, action, host_pattern=None, process_pattern=None):
+        raise NotImplementedError
+
+    @abstractmethod
+    def check_status(self, host_pattern=None, process_pattern=None):
         raise NotImplementedError
 
     def _run_ansible(self, host_pattern, module, module_args):
@@ -124,6 +132,9 @@ class SubServicesMixin(six.with_metaclass(ABCMeta)):
 
 class SupervisorService(SubServicesMixin, ServiceBase):
     inventory_groups = ['webworkers', 'celery', 'pillowtop', 'touchforms', 'formplayer', 'proxy']
+
+    def check_status(self, host_pattern=None, process_pattern=None):
+        self.execute_action('status', host_pattern, process_pattern)
 
     def execute_action(self, action, host_pattern=None, process_pattern=None):
         if host_pattern:
@@ -167,6 +178,11 @@ class AnsibleService(ServiceBase):
         service_args = 'name={} state={}'.format(self.service_name, STATES[action])
         self._run_ansible(host_pattern, 'service', service_args)
 
+    def check_status(self, host_pattern=None, process_pattern=None):
+        host_pattern = host_pattern or ','.join(self.inventory_groups)
+        command = 'service {} status'.format(self.service_name)
+        return self._run_ansible(host_pattern, 'shell', command)
+
 
 class MultiAnsibleService(SubServicesMixin, AnsibleService):
     """Service that is made up of multiple other services e.g. RiakCS"""
@@ -179,7 +195,21 @@ class MultiAnsibleService(SubServicesMixin, AnsibleService):
         """
         raise NotImplementedError
 
+    def check_status(self, host_pattern=None, process_pattern=None):
+        def _status(service_name, run_on):
+            command = 'service {} status'.format(service_name)
+            return self._run_ansible(run_on, 'shell', command)
+
+        self._run_action_on_hosts(_status, host_pattern, process_pattern)
+
     def execute_action(self, action, host_pattern=None, process_pattern=None):
+        def _change_state(service_name, run_on, action=action):
+            service_args = 'name={} state={}'.format(service_name, STATES[action])
+            self._run_ansible(run_on, 'service', service_args)
+
+        return self._run_action_on_hosts(_change_state, host_pattern, process_pattern)
+
+    def _run_action_on_hosts(self, action_fn, host_pattern, process_pattern):
         if host_pattern:
             self.environment.inventory_manager.subset(host_pattern)
 
@@ -194,15 +224,13 @@ class MultiAnsibleService(SubServicesMixin, AnsibleService):
                 raise NoHostsMatch
             run_on = ','.join([host.name for host in hosts])
 
-            service_args = 'name={} state={}'.format(process_pattern, STATES[action])
-            self._run_ansible(run_on, 'service', service_args)
+            action_fn(process_pattern, run_on)
         else:
             for service in self.get_managed_services():
                 run_on = self.get_inventory_group_for_sub_process(service)
                 hosts = self.environment.inventory_manager.get_hosts(run_on)
                 if hosts:
-                    service_args = 'name={} state={}'.format(service, STATES[action])
-                    self._run_ansible(run_on, 'service', service_args)
+                    action_fn(service, run_on)
 
 
 class Postgresql(AnsibleService):
