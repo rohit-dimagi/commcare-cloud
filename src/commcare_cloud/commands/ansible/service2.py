@@ -256,15 +256,57 @@ class Riakcs(MultiAnsibleService):
         }.get(sub_process, 'riakcs')
 
 
-class Webworker(SupervisorService):
+class Kafka(MultiAnsibleService):
+    name = 'kafka'
+    inventory_groups = ['kafka', 'zookeeper']
+
+    def get_managed_services(self):
+        return [
+            'kafka-server', 'zookeeper'
+        ]
+
+    def get_inventory_group_for_sub_process(self, sub_process):
+        return {
+            'stanchion': 'stanchion'
+        }.get(sub_process, 'riakcs')
+
+
+class SingleSupervisorService(SupervisorService):
+    @abstractproperty
+    def supervisor_process_name(self):
+        raise NotImplementedError
+
+    def _get_processes_by_host(self, process_pattern=None):
+        return {
+            tuple(self._all_hosts()): self.supervisor_process_name()
+        }
+
+
+class Webworker(SingleSupervisorService):
     name = 'webworker'
     inventory_groups = ['webworkers']
 
-    def _get_processes_by_host(self, process_pattern=None):
-        all_hosts = self._all_hosts()
-        return {
-            tuple(all_hosts): get_django_webworker_name(self.environment)
-        }
+    @property
+    def supervisor_process_name(self):
+        return get_django_webworker_name(self.environment)
+
+
+class Formplayer(SupervisorService):
+    name = 'formplayer'
+    inventory_groups = ['formplayer']
+
+    @property
+    def supervisor_process_name(self):
+        return get_formplayer_spring_instance_name(self.environment)
+
+
+class Touchforms(SupervisorService):
+    name = 'touchforms'
+    inventory_groups = ['touchforms']
+
+    @property
+    def supervisor_process_name(self):
+        return get_formplayer_instance_name(self.environment)
 
 
 class Celery(SupervisorService):
