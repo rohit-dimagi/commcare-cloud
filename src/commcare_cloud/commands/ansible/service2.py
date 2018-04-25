@@ -357,48 +357,51 @@ SERVICES = [
     Pgbouncer,
     Riakcs,
     Nginx,
+    Formplayer,
+    Touchforms,
+    Kafka,
+    Couchdb,
+    RabbitMq,
+    Elasticsearch,
+    Redis
 ]
+
+SERVICE_NAMES = sorted([
+    service.name for service in SERVICES
+])
+
+SERVICES_BY_NAME = {
+    service.name: service for service in SERVICES
+}
 
 
 class Service2(CommandBase):
     command = 'service2'
 
-    def _service_names(self):
-        return sorted([
-            service.name for service in SERVICES
-        ])
-
     def make_parser(self):
         self.parser.add_argument(
             'services',
             nargs="+",
-            choices=self._service_names(),
-            help="The services to run the command on (comma separated list)"
+            choices=SERVICE_NAMES,
+            help="The services to run the command on"
         )
         self.parser.add_argument(
-            'action',
-            choices=ACTIONS,
+            'action', choices=ACTIONS, default='help', nargs='?',
             help="What action to take"
         )
         self.parser.add_argument('--limit', help=(
-            "Restrict the hosts to run the command on."
+            "Restrict the hosts to run the command on. Use 'help' action to list all option."
         ))
-        self.parser.add_argument(
-            '--only',
-            help=(
-                "Sub-process name to limit action to."
+        self.parser.add_argument('--only', help=(
+                "Sub-service name to limit action to. Use 'help' action to list all option."
             )
         )
 
     def run(self, args, unknown_args):
         environment = get_environment(args.env_name)
 
-        services_by_name = {
-            service.name: service for service in SERVICES
-        }
-
         services = [
-            services_by_name[name]
+            SERVICES_BY_NAME[name]
             for name in args.services
         ]
 
