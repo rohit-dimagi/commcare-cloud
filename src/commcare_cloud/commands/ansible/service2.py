@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod, abstractproperty
 from collections import defaultdict, OrderedDict
 from itertools import groupby
 
@@ -6,7 +6,8 @@ import attr
 import six
 from clint.textui import puts, indent, colored
 
-from commcare_cloud.commands.ansible.helpers import get_django_webworker_name, AnsibleContext
+from commcare_cloud.commands.ansible.helpers import get_django_webworker_name, AnsibleContext, \
+    get_formplayer_spring_instance_name, get_formplayer_instance_name
 from commcare_cloud.commands.ansible.run_module import run_ansible_module
 from commcare_cloud.commands.celery_utils import get_celery_workers
 from commcare_cloud.commands.command_base import CommandBase
@@ -22,13 +23,6 @@ STATES = {
     'status': 'status'
 }
 
-"""
-service celery restart saved_exports_queue:1,pillow_retry_queue:2
-service pillowtop restart CaseToElasticsearchPillow:1,CaseToElasticsearchPillow:2
-"""
-
-
-
 @attr.s
 class ServiceOption(object):
     name = attr.ib()
@@ -36,8 +30,13 @@ class ServiceOption(object):
 
 
 class ServiceBase(six.with_metaclass(ABCMeta)):
-    name = None
-    inventory_groups = None
+    @abstractproperty
+    def name(self):
+        raise NotImplementedError
+
+    @abstractproperty
+    def inventory_groups(self):
+        raise NotImplementedError
 
     def __init__(self, environment, ansible_context, check=False):
         self.environment = environment
