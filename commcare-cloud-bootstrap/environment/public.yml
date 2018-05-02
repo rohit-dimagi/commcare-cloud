@@ -16,7 +16,6 @@ dev_users:
   present:
     - dmiller
     - droberts
-    - jwilson
     - npellegrino
   absent: []
 
