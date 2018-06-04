@@ -17,7 +17,7 @@ def get_monolith_address(environment, exit=sys.exit):
     env = get_environment(environment)
     hosts = env.inventory_manager.get_hosts()
     if len(hosts) != 1:
-        exit("There are {} servers in the environment. Please include the 'server'"
+        exit("There are {} servers in the environment. Please include the 'server' "
              "argument to select one.".format(len(hosts)))
     else:
         return get_server_address(environment, 'all', exit=exit)
