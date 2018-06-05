@@ -8,9 +8,10 @@
   check_mode: no
 
 - name: install supervisor
-  apt: name=supervisor=3.1.4 state=present
   become: yes
-  when: not which_supervisord.stdout
+  pip:
+    name: supervisor
+    version: 3.1.4
 
 - name: retry finding supervisord path
   shell: 'which supervisord'
