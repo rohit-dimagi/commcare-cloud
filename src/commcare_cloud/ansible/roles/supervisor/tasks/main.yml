@@ -8,7 +8,7 @@
   check_mode: no
 
 - name: install supervisor
-  apt: name=supervisor state=present
+  apt: name=supervisor=3.1.4 state=present
   become: yes
   when: not which_supervisord.stdout
 
