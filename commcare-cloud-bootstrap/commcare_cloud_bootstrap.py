@@ -209,10 +209,19 @@ def get_instances(describe_instances):
             yield instance
 
 
-def raw_describe_instances(env_name):
+def raw_describe_running_instances(env_name):
     cmd_parts = [
         'aws', 'ec2', 'describe-instances', '--filters',
         'Name=instance-state-code,Values=16',
+        'Name=tag:env,Values=' + env_name
+    ]
+    return json.loads(subprocess.check_output(cmd_parts))
+
+
+def raw_describe_stopped_instances(env_name):
+    cmd_parts = [
+        'aws', 'ec2', 'describe-instances', '--filters',
+        'Name=instance-state-code,Values=80',
         'Name=tag:env,Values=' + env_name
     ]
     return json.loads(subprocess.check_output(cmd_parts))
@@ -238,6 +247,13 @@ def terminate_instances(instance_ids):
 def stop_instances(instance_ids):
     cmd_parts = [
         'aws', 'ec2', 'stop-instances', '--instance-ids',
+    ] + instance_ids
+    return json.loads(subprocess.check_output(cmd_parts))
+
+
+def start_instances(instance_ids):
+    cmd_parts = [
+        'aws', 'ec2', 'start-instances', '--instance-ids',
     ] + instance_ids
     return json.loads(subprocess.check_output(cmd_parts))
 
@@ -290,7 +306,7 @@ def update_inventory_public_ips(inventory, new_hosts):
 
 
 def poll_for_aws_state(env_name, instance_ids):
-    describe_instances = raw_describe_instances(env_name)
+    describe_instances = raw_describe_running_instances(env_name)
     print_describe_instances(describe_instances)
 
     instances = [instance
@@ -389,7 +405,7 @@ class Show(object):
 
     @staticmethod
     def run(args):
-        describe_instances = raw_describe_instances(args.env)
+        describe_instances = raw_describe_running_instances(args.env)
         print_describe_instances(describe_instances)
 
 
@@ -403,10 +419,27 @@ class Terminate(object):
 
     @staticmethod
     def run(args):
-        describe_instances = raw_describe_instances(args.env)
+        describe_instances = raw_describe_running_instances(args.env)
         instance_ids = [instance['InstanceId'] for instance in get_instances(describe_instances)]
         terminate_instances_result = terminate_instances(instance_ids)
         print(terminate_instances_result)
+        print(instance_ids)
+
+
+class Start(object):
+    command = 'start'
+    help = """Start previously stopped instances for a given env"""
+
+    @staticmethod
+    def make_parser(parser):
+        parser.add_argument('env')
+
+    @staticmethod
+    def run(args):
+        describe_instances = raw_describe_stopped_instances(args.env)
+        instance_ids = [instance['InstanceId'] for instance in get_instances(describe_instances)]
+        start_instances_result = start_instances(instance_ids)
+        print(start_instances_result)
         print(instance_ids)
 
 
@@ -420,7 +453,7 @@ class Stop(object):
 
     @staticmethod
     def run(args):
-        describe_instances = raw_describe_instances(args.env)
+        describe_instances = raw_describe_running_instances(args.env)
         instance_ids = [instance['InstanceId'] for instance in get_instances(describe_instances)]
         stop_instances_result = stop_instances(instance_ids)
         print(stop_instances_result)
@@ -438,7 +471,7 @@ class Reip(object):
 
     @staticmethod
     def run(args):
-        describe_instances = raw_describe_instances(args.env)
+        describe_instances = raw_describe_running_instances(args.env)
         environment = get_environment(args.env)
         new_hosts = get_hosts_from_describe_instances(describe_instances)
         inventory = get_inventory_from_file(environment)
@@ -451,6 +484,7 @@ STANDARD_ARGS = [
     Show,
     Reip,
     Terminate,
+    Start,
     Stop,
 ]
 
