@@ -204,9 +204,13 @@ def print_describe_instances(describe_instances):
 
 
 def get_instances(describe_instances):
-    for reservation in describe_instances['Reservations']:
-        for instance in reservation['Instances']:
-            yield instance
+    if not describe_instances['Reservations']:
+        print("No instances found in the requested state for the specified env.")
+        sys.exit(1)
+    else:
+        for reservation in describe_instances['Reservations']:
+            for instance in reservation['Instances']:
+                yield instance
 
 
 def raw_describe_running_instances(env_name):
