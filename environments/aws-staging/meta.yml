@@ -1,5 +1,5 @@
 deploy_env: staging
-env_monitoring_id: staging
+env_monitoring_id: aws-staging
 users:
   - dimagi
   - dimagi-qa
