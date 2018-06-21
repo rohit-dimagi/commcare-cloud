@@ -150,8 +150,19 @@ class DeployMetadata(object):
         # turn whatever `code_branch` is into a commit hash
         branch = self.repo.get_branch(self._code_branch)
         self._deploy_ref = branch.commit.sha
-
+        print("reached here 2")
         try:
+            print("reached here 3")
+            ref = 'refs/tags/' + '{}-{}-setup_release'.format(self.timestamp, self._environment)
+            print("===========================")
+            print("ref: ", ref)
+            sha = self._deploy_ref
+            print("sha: ", sha)
+            print("deploy ref: ", self._deploy_ref)
+            print("deploy tag: ", self._deploy_tag)
+            print("last sha: ", self.last_commit_sha)
+            print("===========================")
+            print("reached here 5")
             self.repo.create_git_ref(
                 ref='refs/tags/' + '{}-{}-setup_release'.format(self.timestamp, self._environment),
                 sha=self._deploy_ref,

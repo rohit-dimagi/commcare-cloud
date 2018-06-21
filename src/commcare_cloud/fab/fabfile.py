@@ -205,6 +205,7 @@ def _confirm_environment_time(env_name):
 
 
 def _confirm_deploying_same_code():
+    print("reached here")
     if env.deploy_metadata.current_ref_is_different_than_last:
         return
 
