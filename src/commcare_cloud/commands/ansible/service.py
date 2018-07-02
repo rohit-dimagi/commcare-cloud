@@ -274,9 +274,21 @@ class Nginx(AnsibleService):
     inventory_groups = ['proxy']
 
 
-class Elasticsearch(AnsibleService):
-    name = 'elasticsearch'
+class ElasticsearchClassic(AnsibleService):
+    name = 'elasticsearch-classic'
     inventory_groups = ['elasticsearch']
+
+
+class Elasticsearch(ServiceBase):
+    name = 'elasticsearch-classic'
+    service_name = 'elasticsearch-classic'
+    inventory_groups = ['elasticsearch']
+
+    def execute_action(self, action, host_pattern=None, process_pattern=None):
+        if action == 'start':
+            print('start')
+        elif action == 'status':
+            return ElasticsearchClassic(self.environment, self.ansible_context).execute_action(action, host_pattern, process_pattern)
 
 
 class Couchdb(AnsibleService):
