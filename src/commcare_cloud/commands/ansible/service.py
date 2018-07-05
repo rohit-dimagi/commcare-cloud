@@ -280,13 +280,15 @@ class ElasticsearchClassic(AnsibleService):
 
 
 class Elasticsearch(ServiceBase):
-    name = 'elasticsearch-classic'
-    service_name = 'elasticsearch-classic'
+    name = 'elasticsearch'
+    service_name = 'elasticsearch'
     inventory_groups = ['elasticsearch']
 
     def execute_action(self, action, host_pattern=None, process_pattern=None):
         if action == 'start':
             print('start')
+        if action == 'stop':
+            print('stop')
         elif action == 'status':
             return ElasticsearchClassic(self.environment, self.ansible_context).execute_action(action, host_pattern, process_pattern)
 
@@ -503,6 +505,7 @@ SERVICES = [
     Couchdb2,
     RabbitMq,
     Elasticsearch,
+    ElasticsearchClassic,
     Redis,
     Riakcs,
     Kafka,
