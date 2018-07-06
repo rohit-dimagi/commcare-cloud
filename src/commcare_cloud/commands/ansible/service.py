@@ -2,6 +2,7 @@ import re
 from abc import ABCMeta, abstractmethod, abstractproperty
 from collections import defaultdict, OrderedDict
 from itertools import groupby
+import subprocess
 
 import attr
 import six
@@ -285,12 +286,26 @@ class Elasticsearch(ServiceBase):
     inventory_groups = ['elasticsearch']
 
     def execute_action(self, action, host_pattern=None, process_pattern=None):
-        if action == 'start':
-            print('start')
-        if action == 'stop':
-            print('stop')
+        if host_pattern:
+            self.environment.inventory_manager.subset(self.inventory_groups)
+            hosts = self.environment.inventory_manager.get_hosts(host_pattern)
+            if not hosts:
+                raise NoHostsMatch
+
+        host_pattern = host_pattern or ','.join(self.inventory_groups)
+
+        if action == 'stop' or 'restart':
+            self._run_rolling_restart_yml(host_pattern, tags='action_stop')
+            # Find remaining es processes and kill them
+            es_processes_to_kill = subprocess.check_output('ps aux | grep "elasticsearc[h]" | awk "{print $2}"')
+            subprocess.call('kill', es_processes_to_kill)
+        if action == 'start' or 'restart':
+            self._run_rolling_restart_yml(host_pattern, tags='action_start')
         elif action == 'status':
             return ElasticsearchClassic(self.environment, self.ansible_context).execute_action(action, host_pattern, process_pattern)
+
+    def _run_rolling_restart_yml(self, host_pattern, tags):
+        return self._run_ansible_module(host_pattern, module='rolling_restart.yml', module_args='tags={}'.format(tags))
 
 
 class Couchdb(AnsibleService):
