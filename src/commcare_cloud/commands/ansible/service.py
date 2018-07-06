@@ -297,8 +297,10 @@ class Elasticsearch(ServiceBase):
         if action == 'stop' or 'restart':
             self._run_rolling_restart_yml(host_pattern, tags='action_stop')
             # Find remaining es processes and kill them
-            es_processes_to_kill = subprocess.check_output('ps aux | grep "elasticsearc[h]" | awk "{print $2}"')
-            subprocess.call('kill', es_processes_to_kill)
+            # NOTE: This may be unsafe, so commenting out for now
+            # NOTE: Changed grep and kill to pgrep and pkill
+            # es_processes_to_kill = subprocess.check_output('ps aux | pgrep "elasticsearc[h]" | awk "{print $2}"')
+            # subprocess.call('pkill', es_processes_to_kill)
         if action == 'start' or 'restart':
             self._run_rolling_restart_yml(host_pattern, tags='action_start')
         elif action == 'status':
