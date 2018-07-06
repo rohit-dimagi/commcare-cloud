@@ -286,28 +286,24 @@ class Elasticsearch(ServiceBase):
     inventory_groups = ['elasticsearch']
 
     def execute_action(self, action, host_pattern=None, process_pattern=None):
-        if host_pattern:
-            self.environment.inventory_manager.subset(self.inventory_groups)
-            hosts = self.environment.inventory_manager.get_hosts(host_pattern)
-            if not hosts:
-                raise NoHostsMatch
-
-        host_pattern = host_pattern or ','.join(self.inventory_groups)
-
         if action == 'stop' or 'restart':
-            self._run_rolling_restart_yml(host_pattern, tags='action_stop')
+            self._run_rolling_restart_yml(tags='action_stop')
             # Find remaining es processes and kill them
             # NOTE: This may be unsafe, so commenting out for now
-            # NOTE: Changed grep and kill to pgrep and pkill
-            # es_processes_to_kill = subprocess.check_output('ps aux | pgrep "elasticsearc[h]" | awk "{print $2}"')
-            # subprocess.call('pkill', es_processes_to_kill)
+            es_processes_to_kill = subprocess.check_output('ps aux | pgrep "elasticsearc[h]" | awk "{print $2}"')
+            subprocess.call('pkill', es_processes_to_kill)
         if action == 'start' or 'restart':
-            self._run_rolling_restart_yml(host_pattern, tags='action_start')
+            self._run_rolling_restart_yml(tags='action_start')
         elif action == 'status':
             return ElasticsearchClassic(self.environment, self.ansible_context).execute_action(action, host_pattern, process_pattern)
 
-    def _run_rolling_restart_yml(self, host_pattern, tags):
-        return self._run_ansible_module(host_pattern, module='rolling_restart.yml', module_args='tags={}'.format(tags))
+    def _run_rolling_restart_yml(self, tags):
+        from commcare_cloud.commands.ansible.ansible_playbook import run_ansible_playbook
+        run_ansible_playbook(environment=self.environment,
+                             playbook='rolling_restart.yml',
+                             ansible_context=AnsibleContext(args=None),
+                             unknown_args='--tags={}'.format(tags))
+        # return self._run_ansible_module(host_pattern, module='rolling_restart.yml', module_args='tags={}'.format(tags))
 
 
 class Couchdb(AnsibleService):
