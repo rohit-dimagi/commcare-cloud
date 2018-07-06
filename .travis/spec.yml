@@ -15,6 +15,9 @@ allocations:
   couchdb2_proxy:
     count: 1
     from: proxy
+  pg_backup:
+    count: 1
+    from: proxy
   webworkers: 1
   django_manage:
     count: 1
