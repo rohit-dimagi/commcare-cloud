@@ -42,6 +42,9 @@ couch_dbs:
     password: "{{ localsettings_private.COUCH_PASSWORD }}"
     is_https: False
 
+etc_hosts_lines:
+  - '192.30.253.113    github.com'
+
 localsettings:
   ALLOWED_HOSTS:
     - '{{ SITE_HOST }}'
