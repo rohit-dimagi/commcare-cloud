@@ -44,6 +44,7 @@ couch_dbs:
 
 etc_hosts_lines:
   - '192.30.253.113    github.com'
+  - '172.19.3.41       echis.moh.gov.et'
 
 localsettings:
   ALLOWED_HOSTS:
