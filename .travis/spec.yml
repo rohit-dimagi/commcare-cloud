@@ -5,6 +5,12 @@ aws_config:
   key_name: commcarehq_testing
   security_group_id: sg-8f9a57fa
   subnet: subnet-ea62acc5
+  boot_volume:
+    DeviceName: /dev/sda1
+    Ebs:
+      DeleteOnTermination: yes
+      VolumeSize: 8
+      VolumeType: standard
 
 settings:
   users:

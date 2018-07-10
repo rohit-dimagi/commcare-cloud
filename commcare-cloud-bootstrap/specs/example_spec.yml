@@ -6,6 +6,12 @@ aws_config:
   key_name: aws_key_name
   security_group_id: sg-xxxxxxxx
   subnet: subnet-xxxxxxxx
+  boot_volume:
+    DeviceName: /dev/sda1
+    Ebs:
+      DeleteOnTermination: yes
+      VolumeSize: 8
+      VolumeType: standard
 
 allocations:
   proxy: 1
