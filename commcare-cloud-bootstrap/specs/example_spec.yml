@@ -34,3 +34,4 @@ allocations:
     from: riakcs
   couchdb2: 1
   pg_standby: 0
+  control: 1
