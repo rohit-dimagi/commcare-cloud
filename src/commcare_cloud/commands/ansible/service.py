@@ -277,6 +277,7 @@ class Nginx(AnsibleService):
 
 class ElasticsearchClassic(AnsibleService):
     name = 'elasticsearch-classic'
+    service_name = 'elasticsearch'
     inventory_groups = ['elasticsearch']
 
 
