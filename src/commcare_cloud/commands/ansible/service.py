@@ -303,7 +303,7 @@ class Elasticsearch(ServiceBase):
         run_ansible_playbook(environment=self.environment,
                              playbook='rolling_restart.yml',
                              ansible_context=AnsibleContext(args=None),
-                             unknown_args='--tags={}'.format(tags))
+                             unknown_args=['--tags={}'.format(tags)])
         # return self._run_ansible_module(host_pattern, module='rolling_restart.yml', module_args='tags={}'.format(tags))
 
 
