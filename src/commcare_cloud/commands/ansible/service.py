@@ -287,13 +287,13 @@ class Elasticsearch(ServiceBase):
     inventory_groups = ['elasticsearch']
 
     def execute_action(self, action, host_pattern=None, process_pattern=None):
-        if action == 'stop' or 'restart':
+        if action == 'stop' or action == 'restart':
             self._run_rolling_restart_yml(tags='action_stop')
             # Find remaining es processes and kill them
             # NOTE: This may be unsafe, so commenting out for now
             es_processes_to_kill = subprocess.check_output('ps aux | pgrep "elasticsearc[h]" | awk "{print $2}"')
             subprocess.call('pkill', es_processes_to_kill)
-        if action == 'start' or 'restart':
+        if action == 'start' or action == 'restart':
             self._run_rolling_restart_yml(tags='action_start')
         elif action == 'status':
             return ElasticsearchClassic(self.environment, self.ansible_context).execute_action(action, host_pattern, process_pattern)
