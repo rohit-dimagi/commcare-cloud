@@ -7,6 +7,15 @@ TODAY=$(date +"%Y_%m_%d")
 FILENAME="postgres_${ENV}_${BACKUP_TYPE}_${TODAY}"
 DIRECTORY="{{ postgresql_backup_dir }}/${FILENAME}"
 
+BACKUP_DIRECTORY="{{ postgresql_backup_dir }}"
+
+for file in $(ls $BACKUP_DIRECTORY); do
+    if [[ -d $file ]] ; then
+        echo "Exiting since $file not compressed yet."
+        exit 3
+    fi
+done;
+
 {% if not aws_versioning_enabled%}
 UPLOAD_NAME="${FILENAME}"
 {% else %}
