@@ -1,10 +1,10 @@
 # About this changelog
 
-The following changes to `commcare-cloud` that require your attention,
+The following are changes to `commcare-cloud` that require your attention,
 newest first.
 
 Changes that will require an action from anyone choosing
-to update on or after the date listed will be maked "_action required_".
+to update on or after the date listed will be marked "_action required_".
 Those which are worth taking a look at but which may or may not require
 an action on your part will be marked "_action optional_".
 
