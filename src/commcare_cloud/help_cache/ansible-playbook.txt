@@ -19,7 +19,7 @@ Options:
   -h, --help            show this help message and exit
   -i INVENTORY, --inventory=INVENTORY, --inventory-file=INVENTORY
                         specify inventory host path or comma separated host
-                        list. --inventory-file is deprecated
+                        list. --inventory-file is deprecatedEXRTALINE
   -l SUBSET, --limit=SUBSET
                         further limit selected hosts to an additional pattern
   --list-hosts          outputs a list of matching hosts; does not execute
