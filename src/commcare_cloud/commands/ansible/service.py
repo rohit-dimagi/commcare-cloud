@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import re
 from abc import ABCMeta, abstractmethod, abstractproperty
 from collections import defaultdict, OrderedDict
@@ -312,7 +314,7 @@ class Elasticsearch(ServiceBase):
         service = Pillowtop(self.environment, AnsibleContext(None))
         exit_code = service.run(action=action)
         if not exit_code == 0:
-            print("ERROR while trying to {} pillows. Exiting.".format(action))
+            print(("ERROR while trying to {} pillows. Exiting.".format(action)))
             sys.exit(1)
 
     def _run_rolling_restart_yml(self, tags):
@@ -522,7 +524,7 @@ def get_processes_by_host(all_hosts, process_descriptors, process_pattern=None):
 
     processes_by_hosts = {}
     # group hosts together so we do less calls to ansible
-    items = sorted(processes_by_host.items(), key=lambda hp: hp[1])
+    items = sorted(list(processes_by_host.items()), key=lambda hp: hp[1])
     for processes, group in groupby(items, key=lambda hp: hp[1]):
         hosts = tuple([host_processes[0] for host_processes in group])
         processes_by_hosts[hosts] = processes
