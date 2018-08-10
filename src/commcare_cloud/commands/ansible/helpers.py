@@ -115,7 +115,7 @@ def run_action_with_check_mode(run_check, run_apply, skip_check, quiet=False, al
             quiet=quiet)
     elif skip_check:
         user_wants_to_apply = ask('Do you want to apply without running the check first?',
-                                  quiet=quiet)
+                                  quiet=True)
     else:
         exit_code = run_check()
         if exit_code == 1:

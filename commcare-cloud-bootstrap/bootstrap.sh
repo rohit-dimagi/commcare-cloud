@@ -4,19 +4,25 @@ ENV=$1
 BRANCH=$2
 SPEC=$3
 
-commcare-cloud-bootstrap provision $SPEC --env $ENV
-while
-    commcare-cloud $ENV ping all --use-factory-auth
-    [ $? = 4 ]
-do :
-done
 
-commcare-cloud $ENV bootstrap-users --quiet --branch=$BRANCH
-commcare-cloud $ENV deploy-stack --skip-check --quiet -e 'CCHQ_IS_FRESH_INSTALL=1' --branch=$BRANCH
 
-commcare-cloud $ENV fab deploy:confirm=no,skip_record=yes --show=debug --set ignore_kafka_checkpoint_warning=true --branch=$BRANCH
 
-commcare-cloud $ENV django-manage check_services
 
-proxy=$(grep -A1 "\[$ENV-proxy-0\]" environments/$ENV/inventory.ini | tail -n 1| awk '{print $2}' | awk -F'=' '{print $2}')
-curl https://${proxy}/serverup.txt --insecure
+cchq pvtest ansible-playbook deploy_riakcs.yml --branch=pv/riak --skip-check
+
+
+# Encrypt the vault file
+echo 123 | ansible-vault encrypt vault.yml --vault-password-file=/bin/cat
+
+KEY="$(ssh 18.208.153.165 "cat /home/ansible/riak_creds.txt" | grep "riak_key" | awk -F':' '{print $2}')"
+SECRET="$(ssh 18.208.153.165 "cat /home/ansible/riak_creds.txt" | grep "riak_secret" | awk -F':' '{print $2}')"
+
+echo 123 | ansible-vault encrypt <( \
+  echo 123 | ansible-vault view vault.yml --vault-password-file=/bin/cat \
+    | python -c 'import yaml, sys;vars = yaml.load(sys.stdin); vars["secrets"]['"('$KEY')"'] = '"('$SECRET')"';print(yaml.safe_dump(vars, default_flow_style=False))'\
+) --output vault.yml --vault-password-file=/bin/cat
+
+
+# Decrypt the vault file
+echo 123 | ansible-vault decrypt vault.yml --vault-password-file=/bin/cat
+
