@@ -10,7 +10,7 @@ SPEC=$3
 # Generate the key and secret
 #cchq pvtest ansible-playbook deploy_riakcs.yml --branch=pv/riak --skip-check
 
-cchq pvtest urc riakcs
+cchq pvtest update-riak
 #
 ## Encrypt the vault file
 #echo 123 | ansible-vault encrypt vault.yml --vault-password-file=/bin/cat
