@@ -11,7 +11,7 @@ All `commcare-cloud` commands take the following form:
 ```
 commcare-cloud [--control]
                <env>
-               {bootstrap-users,ansible-playbook,django-manage,aps,tmux,ap,validate-environment-settings,deploy-stack,service,update-supervisor-confs,update-users,ping,migrate_couchdb,lookup,run-module,update-config,copy-files,mosh,after-reboot,ssh,downtime,fab,update-local-known-hosts,list-dbs,migrate-couchdb,run-shell-command}
+               {bootstrap-users,ansible-playbook,django-manage,aps,tmux,ap,validate-environment-settings,deploy-stack,service,update-supervisor-confs,update-users,ping,migrate_couchdb,lookup,run-module,update-config,copy-files,mosh,list-postgresql-dbs,after-reboot,ssh,downtime,fab,update-local-known-hosts,migrate-couchdb,run-shell-command}
                ...
 ```
 
@@ -306,7 +306,7 @@ authenticate using the pem file (or prompt for root password if there is no pem 
                         connection type to use (default=smart)
     -T TIMEOUT, --timeout=TIMEOUT
                         override the connection timeout in seconds
-                        (default=10)
+                        (default=30)
     --ssh-common-args=SSH_COMMON_ARGS
                         specify common arguments to pass to sftp/scp/ssh (e.g.
                         ProxyCommand)
@@ -420,7 +420,7 @@ authenticate using the pem file (or prompt for root password if there is no pem 
                         connection type to use (default=smart)
     -T TIMEOUT, --timeout=TIMEOUT
                         override the connection timeout in seconds
-                        (default=10)
+                        (default=30)
     --ssh-common-args=SSH_COMMON_ARGS
                         specify common arguments to pass to sftp/scp/ssh (e.g.
                         ProxyCommand)
@@ -621,7 +621,7 @@ authenticate using the pem file (or prompt for root password if there is no pem 
                         connection type to use (default=smart)
     -T TIMEOUT, --timeout=TIMEOUT
                         override the connection timeout in seconds
-                        (default=10)
+                        (default=30)
     --ssh-common-args=SSH_COMMON_ARGS
                         specify common arguments to pass to sftp/scp/ssh (e.g.
                         ProxyCommand)
@@ -956,6 +956,7 @@ specified user on the source host has permissions to read the files being copied
 The plan file must be formatted as follows:
 
 ```yml
+source_env: env1 (optional if source is different from target)
 copy_files:
   - <target-host>:
       - source_host: <source-host>
@@ -996,10 +997,22 @@ Action to perform
 - cleanup: remove temporary files and remote auth
 
 
-#### `list-dbs`
+#### `list-postgresql-dbs`
 
-List out databases by host
+Example:
 
 ```
-commcare-cloud <env> list-dbs
+commcare-cloud <env> list-postgresql-dbs [--compare]
 ```
+
+To list all database on a particular environment.
+
+```
+commcare-cloud <ev> list-databases
+```
+
+##### Optional Arguments
+
+###### `--compare`
+
+Gives additional databases on the server.
