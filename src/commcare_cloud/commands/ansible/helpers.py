@@ -158,7 +158,7 @@ def get_celery_workers(environment):
             continue
         for comma_separated_queue_names, config in queues.items():
             for queue in comma_separated_queue_names.split(','):
-                if queue == 'flower':
+                if queue == 'flower' or queue == 'beat':
                     # there's always only one, so worker_num doesn't factor into the name
                     worker_range = [None]
                 else:
