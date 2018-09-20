@@ -74,6 +74,26 @@ servers:
     network_tier: "app-private"
     az: "a"
     volume_size: 8
+  - server_name: "minio0-staging"
+    server_instance_type: "t2.small"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 8
+  - server_name: "minio1-staging"
+    server_instance_type: "t2.small"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 8
+  - server_name: "minio2-staging"
+    server_instance_type: "t2.small"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 8
+  - server_name: "minio3-staging"
+    server_instance_type: "t2.small"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 8
 
 proxy_servers:
   - server_name: "proxy1-staging"

@@ -1,0 +1,29 @@
+- import_playbook: update_apt_cache.yml
+
+#- hosts: minio
+#  roles:
+#    - bootstrap-users
+#    - ecryptfs
+
+- hosts: minio
+  roles:
+    - role: atosatto.minio
+      become: yes
+      vars:
+        minio_access_key: "HAPPYTIMESFOREVER"
+        minio_secret_key: "opKAGcRc+H+vfzV3Kz4CZwZQ"
+        minio_install_server: yes
+
+- hosts: minio
+  tasks:
+    - name: Chown Minio data dirs
+      become: yes
+      file:
+        path: '{{ item }}'
+        owner: "minio"
+        group: "minio"
+        mode: 0750
+        state: directory
+      with_items:
+        - /opt/data/minio/data0
+        - /opt/data/minio/data1
