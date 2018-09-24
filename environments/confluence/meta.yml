@@ -1,0 +1,4 @@
+deploy_env: confluence
+env_monitoring_id: confluence
+users:
+  - dimagi

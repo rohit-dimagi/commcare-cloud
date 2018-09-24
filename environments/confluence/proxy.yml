@@ -1,0 +1,2 @@
+SITE_HOST: 'confluence.dimagi.com'
+fake_ssl_cert: no

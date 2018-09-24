@@ -1,0 +1,4 @@
+commcare_cloud_root_user: ansible
+# commcare_cloud_strict_host_key_checking: no #
+commcare_cloud_use_vault: no
+# commcare_cloud_pem: /home/farid/Downloads/confluence.pem

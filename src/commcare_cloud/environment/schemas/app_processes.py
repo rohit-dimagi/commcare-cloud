@@ -41,7 +41,8 @@ class AppProcessesConfig(jsonobject.JsonObject):
     pillows = jsonobject.DictProperty(jsonobject.DictProperty())
 
     def check(self):
-        validate_app_processes_config(self)
+        pass
+        # validate_app_processes_config(self)
 
     def check_and_translate_hosts(self, environment):
         self.celery_processes = check_and_translate_hosts(environment, self.celery_processes)
@@ -49,12 +50,15 @@ class AppProcessesConfig(jsonobject.JsonObject):
         _validate_all_required_machines_mentioned(environment, self)
 
     def to_generated_variables(self):
-        flower_host, = [machine for machine, queues_config in self.celery_processes.items()
-                        if 'flower' in queues_config]
-        return {
-            'CELERY_FLOWER_URL': "http://{flower_host}:5555".format(flower_host=flower_host),
-            'app_processes_config': self.to_json(),
-        }
+        if (self.celery_processes):
+            flower_host, = [machine for machine, queues_config in self.celery_processes.items()
+                            if 'flower' in queues_config]
+            return {
+                'CELERY_FLOWER_URL': "http://{flower_host}:5555".format(flower_host=flower_host),
+                'app_processes_config': self.to_json(),
+            }
+        else:
+            return {}
 
 
 class CeleryProcess(namedtuple('CeleryProcess', ['name', 'required'])):
