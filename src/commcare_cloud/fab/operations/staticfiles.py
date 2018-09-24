@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import datetime
 from fabric.api import roles, parallel, sudo, env
 from fabric.context_managers import cd
 
@@ -120,12 +121,14 @@ def update_manifest(save=False, soft=False, use_current_release=False):
 @roles(ROLES_ALL_SRC)
 @parallel
 def update_translations():
-    with cd(env.code_root):
-        update_locale_command = '{virtualenv_root}/bin/python manage.py update_django_locales'.format(
-            virtualenv_root=env.virtualenv_root,
-        )
-        update_translations_command = '{virtualenv_root}/bin/python manage.py compilemessages -v 0'.format(
-            virtualenv_root=env.virtualenv_root,
-        )
-        sudo(update_locale_command)
-        sudo(update_translations_command)
+    if env.force_update_translations or datetime.datetime.now().isoweekday() == 2:
+        # Tuesday is the only day translations get updated
+        with cd(env.code_root):
+            update_locale_command = '{virtualenv_root}/bin/python manage.py update_django_locales'.format(
+                virtualenv_root=env.virtualenv_root,
+            )
+            update_translations_command = '{virtualenv_root}/bin/python manage.py compilemessages -v 0'.format(
+                virtualenv_root=env.virtualenv_root,
+            )
+            sudo(update_locale_command)
+            sudo(update_translations_command)

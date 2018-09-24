@@ -701,12 +701,13 @@ def manage(cmd):
 
 
 @task(alias='deploy')
-def awesome_deploy(confirm="yes", resume='no', offline='no', skip_record='no'):
+def awesome_deploy(confirm="yes", resume='no', offline='no', skip_record='no', force_update_translations='no'):
     """Preindex and deploy if it completes quickly enough, otherwise abort
     fab <env> deploy:confirm=no  # do not confirm
     fab <env> deploy:resume=yes  # resume from previous deploy
     fab <env> deploy:offline=yes  # offline deploy
     fab <env> deploy:skip_record=yes  # skip record_successful_release
+    fab <env> deploy:force_update_translations=yes  # update translations even if it isn't Tuesday
     """
     _require_target()
     if strtobool(confirm) and (
@@ -735,6 +736,7 @@ def awesome_deploy(confirm="yes", resume='no', offline='no', skip_record='no'):
         warning_message = ''
 
     env.offline = offline == 'yes'
+    env.force_update_translations = force_update_translations == 'yes'
 
     if env.offline:
         print(magenta(
