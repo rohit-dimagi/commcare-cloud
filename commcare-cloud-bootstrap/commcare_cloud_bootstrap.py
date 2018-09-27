@@ -391,6 +391,7 @@ def save_vault_yml(environment):
     print('vault file saved to {}'.format(vault_file),
           file=sys.stderr)
 
+
 def save_app_processes_yml(environment, inventory):
     template = j2.get_template('app-processes.yml.j2')
     celery_host_name = inventory.all_groups['celery'].host_names[0]

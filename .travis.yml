@@ -5,7 +5,6 @@ python: "2.7"
 env:
   global:
     - ANSIBLE_ROLES_PATH="~/.ansible/roles"
-    - ANSIBLE_CONFIG="src/commcare_cloud/ansible/ansible.cfg"
     - TRAVIS_TEST=1
   matrix:
     - TEST=main
@@ -39,8 +38,6 @@ install:
 
 script:
   - ".travis/tests.sh"
-  - "git diff"
-  - "./tests/test_autogen_docs.sh"
 
 after_script:
   - "if [[ $TEST = 'prove-deploy' ]]; then commcare-cloud-bootstrap terminate hq-${TRAVIS_COMMIT}; fi"
