@@ -16,6 +16,7 @@ module "network" {
   vpc_begin_range   = "${var.vpc_begin_range}"
   env               = "${var.environment}"
   azs               = "${var.azs}"
+  az_codes          = "${var.az_codes}"
   vpn_connections   = "${var.vpn_connections}"
   vpn_connection_routes = "${var.vpn_connection_routes}"
   external_routes   = "${var.external_routes}"

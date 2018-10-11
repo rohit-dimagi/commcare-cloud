@@ -4,6 +4,9 @@ variable "environment" {}
 variable "azs" {
   type = "list"
 }
+variable "az_codes" {
+  type = "list"
+}
 variable "vpc_begin_range" {}
 
 # OptInRequired: In order to use this AWS Marketplace product you need to accept terms and subscribe.

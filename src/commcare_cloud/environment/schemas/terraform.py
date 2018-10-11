@@ -12,6 +12,7 @@ class TerraformConfig(jsonobject.JsonObject):
     environment = jsonobject.StringProperty()
     openvpn_image = jsonobject.StringProperty()
     azs = jsonobject.ListProperty(str)
+    az_codes = jsonobject.ListProperty(str, default=['a', 'b', 'c'])
     vpc_begin_range = jsonobject.StringProperty()
     vpn_connections = jsonobject.ListProperty(lambda: VpnConnectionConfig)
     external_routes = jsonobject.ListProperty(lambda: ExternalRouteConfig)
