@@ -20,11 +20,25 @@ Docs at [https://dimagi.github.io/commcare-cloud/](https://dimagi.github.io/comm
 
 # Install and setup
 You will need python 2.7.12+ and `virtualenvwrapper` installed to follow these instructions:
+Ensure that you are on `bash` shell
+
 
 ```
 sudo apt-get install git python-dev python-pip
 sudo pip install virtualenv virtualenvwrapper --ignore-installed six
 ```
+
+##### macOS Notes
+```
+    $ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    $ sudo python get-pip.py
+    $ sudo pip install virtualenv
+    $ sudo pip install virtualenvwrapper --ignore-installed six
+```
+
+- Additional requirements:
+  - [Homebrew](https://brew.sh)
+  - [libmagic](https://macappstore.org/libmagic)
 
 # Setup
 
