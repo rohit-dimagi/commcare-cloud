@@ -120,6 +120,9 @@ pgsynclog1
 [pgbouncer0]
 {{ pgbouncer0-production }} hostname=pgbouncer0-production ec2=yes
 
+[pgrestore0]
+{{ pgrestore0-production }} hostname=pgrestore0-production ec2=yes
+
 [rds_pgmain0]
 {{ pgmain0-production }}
 
@@ -159,6 +162,7 @@ postgresql_30gb
 postgresql_15gb
 pgproxy0
 pgbouncer0
+pgrestore0
 remote_postgresql
 
 [ansible_skip:children]

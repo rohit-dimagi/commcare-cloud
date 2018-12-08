@@ -236,6 +236,11 @@ servers:
     az: "a"
     volume_size: 80
 
+  - server_name: "pgrestore0-production"
+    server_instance_type: c5.4xlarge
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 500
 
 
 proxy_servers:
