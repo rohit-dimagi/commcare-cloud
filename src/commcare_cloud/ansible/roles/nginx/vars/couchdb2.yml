@@ -13,6 +13,8 @@ nginx_sites:
    - "Host $http_host"
    - "X-Real-IP $remote_addr"
    - "X-Forwarded-For $proxy_add_x_forwarded_for"
+   - 'Connection ""'
+   proxy_http_version: 1.1
    locations:
      - name: /
        balancer: "{{ deploy_env }}_couchdb_{{ couchdb2_proxy_port }}"
