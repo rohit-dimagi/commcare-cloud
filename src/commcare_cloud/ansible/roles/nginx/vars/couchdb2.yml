@@ -17,7 +17,7 @@ nginx_sites:
      - name: /
        balancer: "{{ deploy_env }}_couchdb_{{ couchdb2_proxy_port }}"
        proxy_redirect: ' off'
-       client_body_buffer_size: '1m'
+       client_body_buffer_size: '50m'
        proxy_max_temp_file_size: '0'
        proxy_read_timeout: '900s'
      - name: "~ ^/(.*)/_changes"
