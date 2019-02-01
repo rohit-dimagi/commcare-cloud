@@ -1,9 +1,9 @@
 - include: trusty_apt_repos.yml
   when: ansible_distribution_version == '14.04'
 
-- name: Update package list
-  apt: update_cache=yes
-  when: add_nodejs_repo|changed or add_mosh_repo|changed or add_postgres_repo|changed
+#- name: Update package list
+#  apt: update_cache=yes
+#  when: add_nodejs_repo|changed or add_mosh_repo|changed or add_postgres_repo|changed
 
 - name: Install nodejs packages
   apt: name="{{ item }}" state=present
