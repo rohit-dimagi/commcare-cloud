@@ -66,10 +66,10 @@
       become: true
       with_items: "{{ commcarehq_requirements }}"
       pip:
-        requirements: "{{ code_home }}/requirements/{{ item }}"
+        requirements: "{{ code_source }}/requirements/{{ item }}"
         virtualenv: "{{ virtualenv_source }}"
         virtualenv_python: "python3.4"
-        chdir: "{{ code_home }}"
+        chdir: "{{ code_source }}"
       tags:
         - slow
       when: not testing|default(False)
@@ -92,7 +92,7 @@
   pip:
     name: "{{ item }}"
     state: latest
-    virtualenv: "{{ virtualenv_home }}"
+    virtualenv: "{{ virtualenv_source }}"
   with_items:
     - six
     - pip
@@ -101,7 +101,7 @@
 - name: chown virtualenv
   become: true
   file:
-    path: "{{ virtualenv_home }}"
+    path: "{{ virtualenv_source }}"
     state: directory
     owner: "{{ cchq_user }}"
     group: "{{ cchq_user }}"
@@ -111,7 +111,7 @@
   become: true
   template:
     src: localsettings.py.j2
-    dest: "{{ code_home }}/localsettings.py"
+    dest: "{{ code_source }}/localsettings.py"
   tags:
     - localsettings
     - hq-localsettings
@@ -119,7 +119,7 @@
 - name: chown localsettings
   become: true
   file:
-    path: "{{ code_home }}/localsettings.py"
+    path: "{{ code_source }}/localsettings.py"
     state: file
     owner: "{{ cchq_user }}"
     group: "{{ cchq_user }}"
