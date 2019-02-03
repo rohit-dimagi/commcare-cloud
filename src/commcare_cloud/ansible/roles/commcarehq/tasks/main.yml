@@ -53,14 +53,14 @@
         - git
         - slow
 
-    - name: Link source to code_home
-      become: true
-      file:
-        state: link
-        src: "{{ code_source }}"
-        dest: "{{ code_home }}"
-        owner: "{{ cchq_user }}"
-        group: "{{ cchq_user }}"
+#    - name: Link source to code_home
+#      become: true
+#      file:
+#        state: link
+#        src: "{{ code_source }}"
+#        dest: "{{ code_home }}"
+#        owner: "{{ cchq_user }}"
+#        group: "{{ cchq_user }}"
 
     - name: install pip requirements
       become: true
