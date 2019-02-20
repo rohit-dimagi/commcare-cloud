@@ -126,6 +126,8 @@ def _setup_path():
     env.project_media = posixpath.join(env.code_root, 'media')
     env.virtualenv_current = posixpath.join(env.code_current, 'python_env')
     env.virtualenv_root = posixpath.join(env.code_root, 'python_env')
+    env.py3_virtualenv_current = posixpath.join(env.code_current, 'python_env-3_6')
+    env.py3_virtualenv_root = posixpath.join(env.code_root, 'python_env-3_6')
     env.services = posixpath.join(env.code_root, 'services')
     env.jython_home = '/usr/local/lib/jython'
     env.db = '%s_%s' % (env.project, env.deploy_env)
@@ -139,6 +141,8 @@ def _override_code_root_to_current():
     env.project_media = posixpath.join(env.code_root, 'media')
     env.virtualenv_current = posixpath.join(env.code_current, 'python_env')
     env.virtualenv_root = posixpath.join(env.code_root, 'python_env')
+    env.py3_virtualenv_current = posixpath.join(env.code_current, 'python_env-3_6')
+    env.py3_virtualenv_root = posixpath.join(env.code_root, 'python_env-3_6')
     env.services = posixpath.join(env.code_root, 'services')
 
 
@@ -318,7 +322,7 @@ def mail_admins(subject, message, use_current_release=False):
             '%(virtualenv_dir)s/bin/python manage.py '
             'mail_admins --subject %(subject)s %(message)s --slack --environment %(deploy_env)s'
         ) % {
-            'virtualenv_dir': virtualenv_dir,
+            'virtualenv_dir': virtualenv_dir,  # TODO
             'subject': pipes.quote(subject),
             'message': pipes.quote(message),
             'deploy_env': pipes.quote(env.deploy_env),
@@ -691,9 +695,14 @@ def manage(cmd):
         fab production manage:'prune_couch_views --noinput'
     """
     _require_target()
-    with cd(env.code_current):
-        sudo('{env.virtualenv_current}/bin/python manage.py {cmd}'
-             .format(env=env, cmd=cmd))
+    if env.py3_manage:
+        with cd(env.code_current):
+            sudo('{env.py3_virtualenv_current}/bin/python manage.py {cmd}'
+                 .format(env=env, cmd=cmd))
+    else:
+        with cd(env.code_current):
+            sudo('{env.virtualenv_current}/bin/python manage.py {cmd}'
+                 .format(env=env, cmd=cmd))
 
 
 @task(alias='deploy')
@@ -849,7 +858,7 @@ def reset_pillow(pillow):
     ))
     with cd(env.code_root):
         command = '{virtualenv_root}/bin/python manage.py ptop_reset_checkpoint {pillow} --noinput'.format(
-            virtualenv_root=env.virtualenv_root,
+            virtualenv_root=env.py3_virtualenv_root if env.py3_deploy else env.virtualenv_root,
             pillow=pillow,
         )
         sudo(command)

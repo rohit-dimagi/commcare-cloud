@@ -1,2 +1,9 @@
 ignore_kafka_checkpoint_warning: True
 default_branch: autostaging
+py3_include_venv: True
+py3_pillows: False
+py3_celery: False
+py3_webworkers: False
+py3_system_checks: False
+py3_deploy: False
+py3_manage: False

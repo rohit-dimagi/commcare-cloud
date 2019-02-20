@@ -20,7 +20,7 @@ def preindex_views():
             '8 {user}" {mail_flag} | at -t `date -d "5 seconds" '
             '+%m%d%H%M.%S`'
         ).format(
-            virtualenv_root=env.virtualenv_root,
+            virtualenv_root=env.py3_virtualenv_root if env.py3_deploy else env.virtualenv_root,
             code_root=env.code_root,
             user=env.user,
             mail_flag='--mail' if env.email_enabled else ''

@@ -229,6 +229,9 @@ def _clone_virtual_env():
     # There's a bug in virtualenv-clone that doesn't allow us to clone envs from symlinks
     current_virtualenv = sudo('readlink -f {}'.format(env.virtualenv_current))
     sudo("virtualenv-clone {} {}".format(current_virtualenv, env.virtualenv_root))
+    if env.py3_include_venv:
+        py3_current_virtualenv = sudo('readlink -f {}'.format(env.py3_virtualenv_current))
+        sudo("virtualenv-clone {} {}".format(py3_current_virtualenv, env.py3_virtualenv_root))
 
 
 @roles(ROLES_ALL_SRC)
@@ -300,7 +303,7 @@ def record_successful_deploy():
             'record_deploy_success --user "%(user)s" --environment '
             '"%(environment)s" --url %(url)s --minutes %(minutes)s --mail_admins'
         ) % {
-            'virtualenv_current': env.virtualenv_current,
+            'virtualenv_current': env.py3_virtualenv_current if env.py3_deploy else env.virtualenv_current,
             'user': env.user,
             'environment': env.deploy_env,
             'url': env.deploy_metadata.diff_url,
