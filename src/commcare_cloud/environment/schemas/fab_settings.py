@@ -20,7 +20,6 @@ class FabSettingsConfig(jsonobject.JsonObject):
     py3_pillows = jsonobject.BooleanProperty()
     py3_celery = jsonobject.BooleanProperty()
     py3_webworkers = jsonobject.BooleanProperty()
-    py3_system_checks = jsonobject.BooleanProperty()
     py3_deploy = jsonobject.BooleanProperty()
     py3_manage = jsonobject.BooleanProperty()
 
