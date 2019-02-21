@@ -316,13 +316,16 @@ def preindex_views():
 @roles(ROLES_DEPLOY)
 def mail_admins(subject, message, use_current_release=False):
     code_dir = env.code_current if use_current_release else env.code_root
-    virtualenv_dir = env.virtualenv_current if use_current_release else env.virtualenv_root
+    if env.py3_deploy:
+        virtualenv_dir = env.py3_virtualenv_current if use_current_release else env.py3_virtualenv_root
+    else:
+        virtualenv_dir = env.virtualenv_current if use_current_release else env.virtualenv_root
     with cd(code_dir):
         sudo((
             '%(virtualenv_dir)s/bin/python manage.py '
             'mail_admins --subject %(subject)s %(message)s --slack --environment %(deploy_env)s'
         ) % {
-            'virtualenv_dir': virtualenv_dir,  # TODO
+            'virtualenv_dir': virtualenv_dir,
             'subject': pipes.quote(subject),
             'message': pipes.quote(message),
             'deploy_env': pipes.quote(env.deploy_env),
