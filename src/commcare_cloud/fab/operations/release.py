@@ -252,23 +252,26 @@ def update_virtualenv(full_cluster=True):
     @roles(roles_to_use)
     @parallel
     def update():
-        requirements = posixpath.join(env.code_root, 'requirements')
-
         # Optimization if we have current setup (i.e. not the first deploy)
         if files.exists(env.virtualenv_current):
             _clone_virtual_env()
 
+        roots = [(env.virtualenv_root, posixpath.join(env.code_root, 'requirements'))]
+        if env.py3_include_venv:
+            roots.append((env.py3_virtualenv_root, posixpath.join(env.code_root, 'requirements-python3_6')))
+
         with cd(env.code_root):
-            cmd_prefix = 'export HOME=/home/%s && source %s/bin/activate && ' % (
-                env.sudo_user, env.virtualenv_root)
-            # uninstall requirements in uninstall-requirements.txt
-            # but only the ones that are actually installed (checks pip freeze)
-            sudo("%s bash scripts/uninstall-requirements.sh" % cmd_prefix,
-                 user=env.sudo_user)
-            pip_install(cmd_prefix, timeout=60, quiet=True, proxy=env.http_proxy, requirements=[
-                posixpath.join(requirements, 'prod-requirements.txt'),
-                posixpath.join(requirements, 'requirements.txt'),
-            ])
+            for virtualenv_root, requirements_root in roots:
+                cmd_prefix = 'export HOME=/home/%s && source %s/bin/activate && ' % (
+                    env.sudo_user, virtualenv_root)
+                # uninstall requirements in uninstall-requirements.txt
+                # but only the ones that are actually installed (checks pip freeze)
+                sudo("%s bash scripts/uninstall-requirements.sh" % cmd_prefix,
+                     user=env.sudo_user)  # TODO - double check that py3 venv has uninstall run
+                pip_install(cmd_prefix, timeout=60, quiet=True, proxy=env.http_proxy, requirements=[
+                    posixpath.join(requirements_root, 'prod-requirements.txt'),
+                    posixpath.join(requirements_root, 'requirements.txt'),
+                ])
 
     return update
 
