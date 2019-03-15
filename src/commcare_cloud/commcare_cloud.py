@@ -9,6 +9,7 @@ import warnings
 from collections import OrderedDict
 
 from clint.textui import puts, colored
+from commcare_cloud.commands.changelog import Changelog
 
 from commcare_cloud.cli_utils import print_command
 from commcare_cloud.commands.ansible.downtime import Downtime
@@ -42,6 +43,7 @@ COMMAND_GROUPS = OrderedDict([
     ('housekeeping', [
         ValidateEnvironmentSettings,
         UpdateLocalKnownHosts,
+        Changelog,
     ]),
     ('ad-hoc', [
         Lookup,

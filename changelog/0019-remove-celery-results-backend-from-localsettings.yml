@@ -25,3 +25,5 @@ update_steps: |
   ```bash
   commcare-cloud <env> update-config
   ```
+update_script:
+  - update-config

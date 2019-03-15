@@ -48,6 +48,8 @@ class ChangelogEntry(jsonobject.JsonObject):
     # Steps to update
     update_steps = MarkdownProperty()
 
+    update_script = jsonobject.ListProperty()
+
 
 def compile_changelog():
     # Parse the contents of the changelog dir
