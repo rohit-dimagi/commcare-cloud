@@ -43,7 +43,7 @@ def update_code(full_cluster=True):
             _update_code_from_previous_release()
         with cd(env.code_root if not use_current_release else env.code_current):
             sudo('git remote prune origin')
-            sudo('git fetch origin --tags -q')
+            sudo('git fetch origin --tags')
             sudo('git checkout {}'.format(git_tag))
             sudo('git reset --hard {}'.format(git_tag))
             sudo('git submodule sync')
@@ -241,7 +241,7 @@ def _clone_code_from_local_path(from_path, to_path, run_as_sudo=True):
         cmd_fn('git config receive.denyCurrentBranch updateInstead')
         cmd_fn(' && '.join(git_local_submodule_config))
         cmd_fn('git submodule update --init --recursive')
-        cmd_fn(' && '.join(git_remote_submodule_config))
+        # cmd_fn(' && '.join(git_remote_submodule_config))
 
 
 def _clone_virtual_env(virtualenv_current, virtualenv_root):
