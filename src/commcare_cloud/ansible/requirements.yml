@@ -15,3 +15,7 @@
   name: ansible-logrotate
 - src: DavidWittman.redis
   version: 1.2.5
+- src: geerlingguy.filebeat
+  version: 2.0.0
+- name: sansible.logstash
+  version: v2.1.x

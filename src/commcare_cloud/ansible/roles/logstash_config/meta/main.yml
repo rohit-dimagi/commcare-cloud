@@ -1,0 +1,10 @@
+---
+dependencies:
+  - role: sansible.logstash
+    sansible_logstash_family: 7.x
+    sansible_logstash_version: 1:7.0.0
+    sansible_logstash_plugins:
+      - logstash-patterns-core
+      - logstash-filter-alter
+      - logstash-output-datadog_metrics
+    sansible_logstash_default_config: no
