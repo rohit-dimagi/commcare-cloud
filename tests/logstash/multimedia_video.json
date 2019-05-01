@@ -1,0 +1,32 @@
+{
+  "codec": "line",
+  "fields": {
+    "type": "nginx-timing"
+  },
+  "ignore": [
+    "host"
+  ],
+  "testcases": [
+    {
+      "description": "api",
+      "input": [
+        "[28/Oct/2015:15:18:14 +0000] - GET /hq/multimedia/file/CommCareVideo/123456/vid_daily_feeding.mp4 HTTP/1.1 200 3.2"
+      ],
+      "expected": [
+        {
+          "type": "nginx-timing",
+          "@timestamp": "2015-10-28T15:18:14.000Z",
+          "http_timestamp": "28/Oct/2015:15:18:14 +0000",
+          "cache_status": "-",
+          "http_method": "GET",
+          "request_time": 3.2,
+          "status_code": "200",
+          "url_group": "mm/video",
+          "domain": "",
+          "tags": [],
+          "apdex": 0.5
+        }
+      ]
+    }
+  ]
+}

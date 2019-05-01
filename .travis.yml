@@ -6,6 +6,8 @@ env:
   global:
     - ANSIBLE_ROLES_PATH="~/.ansible/roles"
     - TRAVIS_TEST=1
+    - GOROOT=~/go
+    - PATH=$GOROOT/bin:$PATH
   matrix:
     - TEST=main
     - TEST=prove-deploy
@@ -44,6 +46,14 @@ install:
       echo $VAULT_PASSWORD | ansible-vault --vault-password-file=/bin/cat decrypt .travis/secrets/.ssh/commcarehq_testing.pem --output=~/.ssh/commcarehq_testing.pem
       pip install -e commcare-cloud-bootstrap
     fi
+
+  # install go, logstash-filter-verifier, logstash
+  - wget https://dl.google.com/go/go1.12.4.linux-amd64.tar.gz
+  - tar -xvf go1.12.2.linux-amd64.tar.gz
+  - wget https://github.com/magnusbaeck/logstash-filter-verifier/releases/download/1.5.0/logstash-filter-verifier_1.5.0_linux_amd64.tar.gz
+  - tar -xvf logstash-filter-verifier_1.5.0_linux_amd64.tar.gz
+  - wget https://artifacts.elastic.co/downloads/logstash/logstash-7.0.0.tar.gz
+  - tar -xvf logstash-7.0.0.tar.gz
 
 script:
   - ".travis/tests.sh"

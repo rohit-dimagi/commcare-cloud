@@ -1,0 +1,32 @@
+{
+  "codec": "line",
+  "fields": {
+    "type": "nginx-timing"
+  },
+  "ignore": [
+    "host"
+  ],
+  "testcases": [
+    {
+      "description": "api",
+      "input": [
+        "[28/Oct/2015:15:18:14 +0000] - GET /hq/multimedia/file/CommCareImage/123456/module4_form0_en.png HTTP/1.1 401 2.2"
+      ],
+      "expected": [
+        {
+          "type": "nginx-timing",
+          "@timestamp": "2015-10-28T15:18:14.000Z",
+          "http_timestamp": "28/Oct/2015:15:18:14 +0000",
+          "cache_status": "-",
+          "http_method": "GET",
+          "request_time": 2.2,
+          "status_code": "401",
+          "url_group": "mm/image",
+          "domain": "",
+          "tags": [],
+          "apdex": 1
+        }
+      ]
+    }
+  ]
+}

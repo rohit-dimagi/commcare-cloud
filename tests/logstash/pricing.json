@@ -1,0 +1,32 @@
+{
+  "codec": "line",
+  "fields": {
+    "type": "nginx-timing"
+  },
+  "ignore": [
+    "host"
+  ],
+  "testcases": [
+    {
+      "description": "pricing",
+      "input": [
+        "[28/Oct/2015:15:18:14 +0000] - GET /pricing/ HTTP/1.1 200 0.2"
+      ],
+      "expected": [
+        {
+          "type": "nginx-timing",
+          "@timestamp": "2015-10-28T15:18:14.000Z",
+          "http_timestamp": "28/Oct/2015:15:18:14 +0000",
+          "cache_status": "-",
+          "http_method": "GET",
+          "request_time": 0.2,
+          "status_code": "200",
+          "url_group": "/pricing/",
+          "tags": [],
+          "domain": "",
+          "apdex": 1
+        }
+      ]
+    }
+  ]
+}

@@ -33,11 +33,19 @@ then
         ./tests/test_autogen_docs.sh
     }
 
+    test_logstash_filters() {
+        TESTS_PATH=tests/logstash/
+        FILTERS_PATH=src/commcare_cloud/ansible/roles/logstash_config/templates/02-filters.conf
+        LOGSTASH_BIN=~/logstash-7.0.0/bin
+        ~/logstash-filter-verifier ${TESTS_PATH} ${FILTERS_PATH} --logstash-path ${LOGSTASH_BIN}/logstash --sockets
+    }
+
     test_syntax
     test_localsettings
     test_dimagi_environments
     nosetests -v
     test_autogen_docs
+    test_logstash_filters
 
 elif [[ ${TEST} = 'prove-deploy' ]]
 then

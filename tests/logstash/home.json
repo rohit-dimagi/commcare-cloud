@@ -1,0 +1,32 @@
+{
+  "codec": "line",
+  "fields": {
+    "type": "nginx-timing"
+  },
+  "ignore": [
+    "host"
+  ],
+  "testcases": [
+    {
+      "description": "home",
+      "input": [
+        "[01/Feb/2015:20:14:43 +0000] - GET /home/ HTTP/1.1 200 18.067"
+      ],
+      "expected": [
+        {
+          "type": "nginx-timing",
+          "@timestamp": "2015-02-01T20:14:43.000Z",
+          "http_timestamp": "01/Feb/2015:20:14:43 +0000",
+          "cache_status": "-",
+          "http_method": "GET",
+          "request_time": 18.067,
+          "status_code": "200",
+          "url_group": "/home/",
+          "tags": [],
+          "domain": "",
+          "apdex": 0
+        }
+      ]
+    }
+  ]
+}
