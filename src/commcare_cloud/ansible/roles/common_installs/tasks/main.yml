@@ -16,6 +16,11 @@
   register: add_pango_repo
   when: ansible_distribution_version == '14.04'
 
+- name: Add Python PPA
+  apt_repository: repo='ppa:deadsnakes/ppa' state=present
+  register: add_python_ppa
+  when: ansible_distribution_version == '18.04'
+
 - name: Update package list
   apt: update_cache=yes
   when: add_mosh_repo is changed or add_postgres_repo is changed or add_pango_repo is changed

@@ -7,3 +7,5 @@
     - python-minimal
     - python3-pip
     - ufw
+    - python3.7
+    - python3.7-dev
