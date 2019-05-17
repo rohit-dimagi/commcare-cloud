@@ -28,5 +28,8 @@
         state: present
     - apt:
         name: couchdb
+        state: absent
+    - apt:
+        name: couch-libmozjs185-1.0
         state: present
   when: ansible_distribution_version == '18.04'
