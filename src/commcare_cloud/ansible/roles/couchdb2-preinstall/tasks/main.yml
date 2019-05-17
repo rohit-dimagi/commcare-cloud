@@ -16,3 +16,12 @@
     mode: 0755
   with_items:
     - "{{ couchdb_parent_srcs_dir }}"
+
+- name: Install libmozjs185-dev directly (bionic)
+  become: yes
+  tasks:
+    - shell: wget http://launchpadlibrarian.net/309343863/libmozjs185-1.0_1.8.5-1.0.0+dfsg-7_amd64.deb
+    - shell: wget http://launchpadlibrarian.net/309343864/libmozjs185-dev_1.8.5-1.0.0+dfsg-7_amd64.deb
+    - shell: dpkg -i libmozjs185-1.0_1.8.5-1.0.0+dfsg-7_amd64.deb
+    - shell: dpkg -i libmozjs185-dev_1.8.5-1.0.0+dfsg-7_amd64.deb
+  when: ansible_distribution_version == '18.04'
