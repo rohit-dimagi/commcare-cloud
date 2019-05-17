@@ -4,6 +4,9 @@
   with_items:
     - software-properties-common
     - npm
+    - node-gyp  # npm requires
+    - nodejs-dev  # node-gyp requires
+    - libssl1.0-dev  # nodejs-dev requires
     - python-minimal
     - python3-pip
     - ufw
