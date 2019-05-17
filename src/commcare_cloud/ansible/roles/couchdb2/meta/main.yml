@@ -3,17 +3,4 @@ dependencies:
   - couchdb2-preinstall
   - role: andrewrothstein.couchdb-cluster
     when: ansible_distribution_version == '14.04'
-  - role: andrewrothstein.couchdb-cluster
-    couchdb_dep_pkgs:
-    # copied and moidifed from andrewrothstein.couchdb-cluster/vars/Debian.yml
-    # to remove libmozjs185-dev which we have to install manually on bionic
-    - build-essential
-    - pkg-config
-    - erlang-nox
-    - erlang-dev
-    - erlang-reltool
-    - libicu-dev
-    - libnspr4-dev
-    - libcurl4-openssl-dev
-    when: ansible_distribution_version == '18.04'
   - role: monit

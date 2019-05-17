@@ -17,11 +17,16 @@
   with_items:
     - "{{ couchdb_parent_srcs_dir }}"
 
-- name: Install libmozjs185-dev directly (bionic)
+- name: Install couchdb directly (bionic)
   become: yes
-  tasks:
-    - shell: wget http://launchpadlibrarian.net/309343863/libmozjs185-1.0_1.8.5-1.0.0+dfsg-7_amd64.deb
-    - shell: wget http://launchpadlibrarian.net/309343864/libmozjs185-dev_1.8.5-1.0.0+dfsg-7_amd64.deb
-    - shell: dpkg -i libmozjs185-1.0_1.8.5-1.0.0+dfsg-7_amd64.deb
-    - shell: dpkg -i libmozjs185-dev_1.8.5-1.0.0+dfsg-7_amd64.deb
+  block:
+    - apt_key:
+        url: https://couchdb.apache.org/repo/bintray-pubkey.asc
+        state: present
+    - apt_repository:
+        repo: deb https://apache.bintray.com/couchdb-deb bionic main
+        state: present
+    - apt:
+        name: couchdb
+        state: present
   when: ansible_distribution_version == '18.04'
