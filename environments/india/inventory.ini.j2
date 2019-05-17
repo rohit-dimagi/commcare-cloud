@@ -11,11 +11,11 @@
 {{ __couch3__ }}
 {{ __couch4__ }}
 {{ __redis0__ }}
-{{ __es0__ }}
-{{ __es1__ }}
+{{ __es0__ }} elasticsearch_node_name=es0 elasticsearch_node_zone=aws
+{{ __es1__ }} elasticsearch_node_name=es1 elasticsearch_node_zone=aws
 {{ __formplayer1__ }}
 {{ __pillow2__ }}
-{{ __kafka1__ }}
+{{ __kafka1__ }} kafka_broker_id=1
 {{ __pgbouncer0__ }}
 {{ __proxy1__ }} public_ip={{ aws_resources['proxy1-india.public_ip'] }}
 {{ __rds_pgmain0__ }}
