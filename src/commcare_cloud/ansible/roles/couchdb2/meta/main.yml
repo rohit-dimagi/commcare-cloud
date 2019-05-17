@@ -1,5 +1,19 @@
 ---
 dependencies:
   - couchdb2-preinstall
-  - andrewrothstein.couchdb-cluster
+  - role: andrewrothstein.couchdb-cluster
+    when: ansible_distribution_version == '14.04'
+  - role: andrewrothstein.couchdb-cluster
+    couchdb_dep_pkgs:
+    - build-essential
+    - pkg-config
+    - erlang-nox
+    - erlang-dev
+    - erlang-reltool
+    - libicu-dev
+    # The only difference is the following line, replacing "libmozjs185-dev"
+    - libmozjs-38-dev
+    - libnspr4-dev
+    - libcurl4-openssl-dev
+    when: ansible_distribution_version == '18.04'
   - role: monit
