@@ -102,7 +102,7 @@
         - "{{ virtualenv_source }}"
 
   when: (CCHQ_IS_FRESH_INSTALL is defined and CCHQ_IS_FRESH_INSTALL) or not gitdir.stat.exists
-        
+
 - name: Upgrade python packages
   pip:
     name: "{{ item }}"
