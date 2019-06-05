@@ -106,6 +106,34 @@ servers:
     group: couchdb2
     os: trusty
 
+  - server_name: "couch7-india"
+    server_instance_type: "c5.2xlarge"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 20
+    block_device:
+      volume_size: 250
+    group: couchdb2
+    os: bionic
+  - server_name: "couch8-india"
+    server_instance_type: "c5.2xlarge"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 20
+    block_device:
+      volume_size: 250
+    group: couchdb2
+    os: bionic
+  - server_name: "couch9-india"
+    server_instance_type: "c5.2xlarge"
+    network_tier: "db-private"
+    az: "a"
+    volume_size: 20
+    block_device:
+      volume_size: 250
+    group: couchdb2
+    os: bionic
+
   - server_name: "redis0-india"
     server_instance_type: "r5.large"
     network_tier: "db-private"
