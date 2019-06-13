@@ -66,6 +66,10 @@
 
 - meta: flush_handlers
 
+- name: wait for monit to come back up
+  wait_for:
+    timeout: 20
+
 - monit:
     name: pgbouncer
     state: monitored
