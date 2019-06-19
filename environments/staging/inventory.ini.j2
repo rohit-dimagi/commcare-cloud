@@ -4,6 +4,7 @@
 # using the aws-fill-inventory command.
 
 {{ __proxy0__ }} public_ip={{ aws_resources['proxy0-staging.public_ip'] }}
+{{ __couchtest__ }}
 
 [proxy:children]
 # Amazon EC2
@@ -40,13 +41,10 @@ remote_postgresql
 
 {{ __couch5__ }}
 
-{{ __couchtest__ }}
-
 [couchdb2:children]
 couch3
 couch4
 couch5
-couchtest
 
 [couchdb2_proxy:children]
 couch3
