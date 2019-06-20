@@ -121,7 +121,7 @@ servers:
     os: bionic
 
   - server_name: "couchtest-staging"
-    server_instance_type: "t3.large"
+    server_instance_type: "t3.small"
     network_tier: "db-private"
     az: "a"
     volume_size: 20
