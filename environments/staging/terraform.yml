@@ -125,8 +125,6 @@ servers:
     network_tier: "db-private"
     az: "a"
     volume_size: 20
-    block_device:
-      volume_size: 20
     group: "reboot-test"
     os: bionic
 
