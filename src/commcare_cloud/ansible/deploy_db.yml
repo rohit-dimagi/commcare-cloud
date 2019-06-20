@@ -8,7 +8,6 @@
     - riakcs
     - formplayer
     - django_manage
-    - couchtest
   become: true
   roles:
     - {role: ecryptfs, tags: 'ecryptfs'}
