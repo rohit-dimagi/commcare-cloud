@@ -40,10 +40,13 @@ remote_postgresql
 
 {{ __couch5__ }}
 
+{{ __couchtest__ }}
+
 [couchdb2:children]
 couch3
 couch4
 couch5
+couchtest
 
 [couchdb2_proxy:children]
 couch3
